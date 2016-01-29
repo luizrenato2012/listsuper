@@ -10,8 +10,9 @@
         http://www.springframework.org/schema/mvc
         http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
  
-	<context:component-scan base-package="br.com.listsuper.controller" />
- 
+	<context:component-scan base-package="br.com.listsuper.model" />
+	
+	<bean id="dao" class="br.com.listsuper.model.ProdutoDAOImplMock"  scope="singleton" />
 	<mvc:annotation-driven />
  
 </beans>
