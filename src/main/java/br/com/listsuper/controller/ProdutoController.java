@@ -45,12 +45,19 @@ public class ProdutoController {
 	@ResponseBody
 	public ResponseEntity insere (@RequestParam("descricao")String descricao) {
 		try {
+			if (descricao==null || descricao.trim().equals("") || descricao.length()< 3) {
+				throw new ListSuperException("Descricao invalida");
+			}
 			Logger.getLogger("ProdutoController").info("inserindo " + descricao);
 			Produto p = new Produto(descricao);
 			dao.insert(p);
 			Logger.getLogger("ProdutoController").info("inserindo " + descricao);
 			return new ResponseEntity<String>("Insercao com sucesso",HttpStatus.OK);
-		} catch(Exception e ) {
+		} catch(ListSuperException e ) {
+			e.printStackTrace();
+			return new ResponseEntity<String>("Erro "+ e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+		catch(Exception e ) {
 			e.printStackTrace();
 			return new ResponseEntity<String>("Erro "+ e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
