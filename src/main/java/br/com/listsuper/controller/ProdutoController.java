@@ -25,6 +25,7 @@ public class ProdutoController {
 
 	@Autowired
 	private ProdutoDAOImplMock dao;
+	private Logger log = Logger.getLogger("ProdutoController");
 
 	@RequestMapping(value="/home", produces="application/json", method= RequestMethod.GET)
 	@ResponseBody
@@ -36,22 +37,24 @@ public class ProdutoController {
 	@RequestMapping(value="/list", produces="application/json", method= RequestMethod.GET)
 	@ResponseBody
 	public List<Produto> listaTodos() {
-		return dao.listAll();
+		log.info("Listando " );
+		List<Produto> lista = dao.listAll();
+		log.info("Produtos  " + lista);
+		return lista;
 	}
 
 
-	@RequestMapping(value="/insert",  method= RequestMethod.POST, consumes="text/plain", 
-			headers = "Content-Type=application/x-www-form-urlencoded")
+	@RequestMapping(value="/insert",  method= RequestMethod.POST, produces="application/json")
 	@ResponseBody
 	public ResponseEntity insere (@RequestParam("descricao")String descricao) {
 		try {
 			if (descricao==null || descricao.trim().equals("") || descricao.length()< 3) {
 				throw new ListSuperException("Descricao invalida");
 			}
-			Logger.getLogger("ProdutoController").info("inserindo " + descricao);
+			log.info("inserindo " + descricao);
 			Produto p = new Produto(descricao);
 			dao.insert(p);
-			Logger.getLogger("ProdutoController").info("inserindo " + descricao);
+			log.info("inserindo " + descricao);
 			return new ResponseEntity<String>("Insercao com sucesso",HttpStatus.OK);
 		} catch(ListSuperException e ) {
 			e.printStackTrace();

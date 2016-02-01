@@ -6,10 +6,22 @@
 	<script src="../js/angular.js"></script>
 	<script src="../js/angular.min.js"></script>
 	<script src="js/controller.js"></script>
+	<script src="js/service.js"></script>
 </head>
 <body>
 	<div ng-controller='ProdutoController'>
-		{{mensagem}}
+		
+		<div id='cadastro'>
+			<p><label>Descri&ccedil;&atilde;o</label><input type='text' ng-model='descricao'/></p>
+			<button ng-click='grava()'>Gravar</button>
+			<br/>
+			{{mensagem}}
+		</div>
+		<br/>
+		<div id='consulta'>
+
+			<button ng-click='recebe()'>Receber</button>
+		</form>
 	</div>
 </body>
 </html>
