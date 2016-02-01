@@ -70,6 +70,22 @@
 					<target>${jdk.version}</target>
 				</configuration>
 			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<webappDirectory> ${basedir}/target/resources </webappDirectory>
+					<webResources>
+						<webResource>
+							<directory>${basedir}/target/resources</directory>
+							<targetPath>${basedir}/target</targetPath>
+						</webResource>
+					</webResources>
+				</configuration>
+			</plugin>
+
 		</plugins>
 	</build>
 </project>

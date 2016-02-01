@@ -3,7 +3,6 @@ package br.com.listsuper.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -19,6 +18,7 @@ public class ProdutoDAOImplMock implements ProdutoDAO {
 	public void insert(Produto p) {
 		p.setDescricao(p.getDescricao().toUpperCase());
 		p.setId(this.produtos.size()+1);
+		this.produtos.add(p);
 	}
 
 	@Override

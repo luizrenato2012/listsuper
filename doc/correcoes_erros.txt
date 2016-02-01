@@ -1,0 +1,3 @@
+Ao tentar fazer synchronize nao baixa as alteracoes (pull); mostra apenas arquivos que já foram comitados p/ comitar novamente.
+http://stackoverflow.com/questions/8820668/the-current-branch-is-not-configured-for-pull-no-value-for-key-branch-master-mer/9711056#9711056
+
