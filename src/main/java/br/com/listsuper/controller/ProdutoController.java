@@ -46,7 +46,11 @@ public class ProdutoController {
 	@ResponseBody
 	public List<Produto> listaPorDescricao(@PathVariable("descricao") String descricao){
 //		log.info("pesquisando " + descricao );
-		return dao.listByDescricao(descricao);
+		if (descricao!=null && descricao.trim().equals("")) {
+			return dao.listByDescricao(descricao);
+		} else {
+			return dao.listAll();
+		}
 	}
 
 
