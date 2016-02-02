@@ -1,0 +1,10 @@
+body {
+	font-family: 'Arial';
+}
+.erro {
+	color: #FF0000;
+}
+
+.info {
+	color: #0000FF;
+}

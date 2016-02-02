@@ -19,25 +19,37 @@ serviceModule.service('ProdutoService',['$http','$q', function($http, $q) {
 		return defer.promise;
 	}
 
-	this.grava = function(descricao) {
+	this.grava = function(produto) {
 		var defer = $q.defer();
 		//success e error estao depreciados, usar then
-		$http({
-			method: 'POST',
-			url: 'http://localhost:8080/listsuper/rest/produtos/insert',
-			params: {'descricao': descricao},	
-			headers: {'content-type': 'application/x-www-form-urlencoded'},
-		}).then(
-				function(data,status,headers, config) {
-					defer.resolve(data);
+		$http.post('../rest/produtos/save', produto).then(
+				//status,headers, config sao fornecidos por data
+				function(data) {
+					defer.resolve(data.data);
 					console.log(data);
 				},
-				function(data,status,headers, config) {
-					defer.reject(data);
+				function(data) {
+					defer.reject("Erro ao gravar ");
 					console.error('erro ao gravar ' + data);
 				}
 		
 		);
+		return defer.promise;
+	}
+	
+	this.pesquisa = function(descricao) {
+		var defer = $q.defer();
+		$http.get('../rest/produtos/query/descricao/'+descricao).then(
+				function(data) {
+					defer.resolve(data.data);
+					console.log(data);
+				},
+				function(data) {
+					defer.reject('Erro ao pesquisar');
+					console.error('Erro ao pesquisar ' + data)
+				}
+		);
+		
 		return defer.promise;
 	}
 }]);

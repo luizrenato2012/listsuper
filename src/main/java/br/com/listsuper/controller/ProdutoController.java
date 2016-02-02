@@ -7,12 +7,11 @@ import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -27,7 +26,7 @@ public class ProdutoController {
 	private ProdutoDAOImplMock dao;
 	private Logger log = Logger.getLogger("ProdutoController");
 
-	@RequestMapping(value="/home", produces="application/json", method= RequestMethod.GET)
+	@RequestMapping(value="/home", method= RequestMethod.GET)
 	@ResponseBody
 	@ResponseStatus(value=HttpStatus.OK)
 	public String teste() {
@@ -42,27 +41,49 @@ public class ProdutoController {
 		log.info("Produtos  " + lista);
 		return lista;
 	}
-
-
-	@RequestMapping(value="/insert",  method= RequestMethod.POST, produces="application/json")
+	
+	@RequestMapping(value="/query/descricao/{descricao}", produces="application/json", method=RequestMethod.GET)
 	@ResponseBody
-	public ResponseEntity insere (@RequestParam("descricao")String descricao) {
+	public List<Produto> listaPorDescricao(@PathVariable("descricao") String descricao){
+//		log.info("pesquisando " + descricao );
+		return dao.listByDescricao(descricao);
+	}
+
+
+	@RequestMapping(value="/save",  method= RequestMethod.POST, produces="application/json")
+	@ResponseBody
+	public ResultadoVO grava (@RequestBody Produto produto) {
+		ResultadoVO resultado = null;
 		try {
-			if (descricao==null || descricao.trim().equals("") || descricao.length()< 3) {
-				throw new ListSuperException("Descricao invalida");
+			this.validaDescricao(produto.getDescricao());
+			log.info("inserindo " + produto.getDescricao());
+			if (produto.getId()!=null && produto.getId()!=0) {
+				dao.update(produto);
+				log.info("Atlerado produto " + produto);
+
+			} else {
+				dao.insert(produto);
+				log.info("Criado produto " + produto);
 			}
-			log.info("inserindo " + descricao);
-			Produto p = new Produto(descricao);
-			dao.insert(p);
-			log.info("inserindo " + descricao);
-			return new ResponseEntity<String>("Insercao com sucesso",HttpStatus.OK);
+			resultado = new ResultadoVO("criado produto " , TipoResultado.OK);
 		} catch(ListSuperException e ) {
 			e.printStackTrace();
-			return new ResponseEntity<String>("Erro "+ e.getMessage(), HttpStatus.BAD_REQUEST);
+			resultado = new ResultadoVO(e.getMessage() , TipoResultado.ERRO_NEGOCIO);
 		}
 		catch(Exception e ) {
 			e.printStackTrace();
-			return new ResponseEntity<String>("Erro "+ e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+			resultado = new ResultadoVO(e.getMessage() , TipoResultado.ERRO_SISTEMA);
+		}
+		return resultado;
+	}
+	
+	private void validaDescricao(String descricao) {
+		if (descricao==null || descricao.trim().equals("") || descricao.length()< 3) {
+			throw new ListSuperException("Descricao invalida");
+		}
+		
+		if (this.dao.isExiste(descricao)) {
+			throw new ListSuperException("Produto já cadastrado");
 		}
 	}
 	

@@ -7,20 +7,28 @@
 	<script src="../js/angular.min.js"></script>
 	<script src="js/controller.js"></script>
 	<script src="js/service.js"></script>
+	<link rel='stylesheet' type='text/css' href='css/style.css'/>
 </head>
 <body>
 	<div ng-controller='ProdutoController'>
 		
 		<div id='cadastro'>
-			<p><label>Descri&ccedil;&atilde;o</label><input type='text' ng-model='descricao'/></p>
-			<button ng-click='grava()'>Gravar</button>
+			<p><label>Descri&ccedil;&atilde;o</label><input type='text' ng-model='produto.descricao' ng-change='limpa()'/></p>
+			<button ng-click='grava(produto)'>Gravar</button>
+			<button ng-click='pesquisa(produto.descricao)'>Pesquisa</button>
 			<br/>
-			{{mensagem}}
+			<p ng-show="msg_erro !='' " class='erro'>erro -> {{msg_erro}}</p>
+			<p ng-show="msg_info !='' " class='info'>{{msg_info}}</p>
 		</div>
 		<br/>
 		<div id='consulta'>
-
-			<button ng-click='recebe()'>Receber</button>
+			<table ng-show='produtos.length!=0'>
+				<th>Num</th> <th>Descri&ccedil;&atilde;o</th> <th>...</th>
+				<tr ng-repeat='produto in produtos'>
+					<td>{{$index}}</td> <td>{{produto.descricao}}</td> <td><button ng-click='edita(produtos[$index])'>...</button> </td>
+				</tr>
+			</table>
+			<!-- <button ng-click='recebe()'>Receber</button>  -->
 		</form>
 	</div>
 </body>

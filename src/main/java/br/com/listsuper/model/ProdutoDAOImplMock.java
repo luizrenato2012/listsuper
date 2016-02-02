@@ -1,13 +1,16 @@
 package br.com.listsuper.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ProdutoDAOImplMock implements ProdutoDAO {
+public class ProdutoDAOImplMock implements ProdutoDAO, Serializable {
 
+	private static final long serialVersionUID = 3563033397080066807L;
+	
 	private List<Produto> produtos;
 	
 	public ProdutoDAOImplMock() {
@@ -35,7 +38,7 @@ public class ProdutoDAOImplMock implements ProdutoDAO {
 	public List<Produto> listByDescricao(String descricao) {
 		List<Produto> lista = new ArrayList<Produto>();
 		for(Produto produto: this.produtos){
-			if (produto.getDescricao().contains(descricao)){
+			if (produto.getDescricao().contains(descricao.toUpperCase())){
 				lista.add(produto);
 			}
 		}
@@ -54,14 +57,24 @@ public class ProdutoDAOImplMock implements ProdutoDAO {
 
 	@Override
 	public void update(Produto p) {
-		int idx = this.produtos.indexOf(p);
+		int idx = 0; 
 		for(Produto produto: this.produtos){
 			if (produto.getId().equals(p.getId())){
+				idx = this.produtos.indexOf(produto);
 				produto = p;
 				this.produtos.set(idx, p);
 			}
 		}
-
 	}
+	
+	public boolean isExiste(String descricao) {
+		for(Produto produto : this.produtos){
+			if (produto.getDescricao().equalsIgnoreCase(descricao)){
+				return true;
+			}
+		}
+		return false;
+	}
+	
 
 }
