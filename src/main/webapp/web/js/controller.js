@@ -11,7 +11,7 @@ testeMod.controller('ProdutoController', ['$scope','$http', '$q','ProdutoService
 				console.log(data);
 				$scope.mensagem='Produtos recebidos com sucesso.';
 			}, function(error) {
-				console.erro('Erro ao receber produtos '+ error);
+				console.error('Erro ao receber produtos '+ error);
 				$scope.mensagem='Erro ao receber produtos ';
 			}	
 		);

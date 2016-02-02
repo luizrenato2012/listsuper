@@ -25,7 +25,8 @@ serviceModule.service('ProdutoService',['$http','$q', function($http, $q) {
 		$http({
 			method: 'POST',
 			url: 'http://localhost:8080/listsuper/rest/produtos/insert',
-			params: {'descricao': descricao}	
+			params: {'descricao': descricao},	
+			headers: {'content-type': 'application/x-www-form-urlencoded'},
 		}).then(
 				function(data,status,headers, config) {
 					defer.resolve(data);
@@ -37,5 +38,6 @@ serviceModule.service('ProdutoService',['$http','$q', function($http, $q) {
 				}
 		
 		);
+		return defer.promise;
 	}
 }]);
