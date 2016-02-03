@@ -45,15 +45,15 @@ public class ProdutoController {
 	@RequestMapping(value="/query/descricao/{descricao}", produces="application/json", method=RequestMethod.GET)
 	@ResponseBody
 	public List<Produto> listaPorDescricao(@PathVariable("descricao") String descricao){
-//		log.info("pesquisando " + descricao );
-		if (descricao!=null && descricao.trim().equals("")) {
-			return dao.listByDescricao(descricao);
-		} else {
+		//log.info("pesquisando " + descricao );
+		if (descricao.trim().equals("TODOS")) {
 			return dao.listAll();
+		} else {
+			return dao.listByDescricao(descricao);
 		}
 	}
 	
-	@RequestMapping(value="/delete/{id}", produces="applicaion/json", method=RequestMethod.DELETE)
+	@RequestMapping(value="/delete/{id}", produces="application/json", method=RequestMethod.DELETE)
 	@ResponseBody
 	public ResultadoVO exclui(@PathVariable("id") int id) {
 		ResultadoVO resultado = null;

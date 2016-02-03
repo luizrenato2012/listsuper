@@ -39,6 +39,9 @@ serviceModule.service('ProdutoService',['$http','$q', function($http, $q) {
 	
 	this.pesquisa = function(descricao) {
 		var defer = $q.defer();
+		if (descricao=='') {
+			descricao='TODOS';	
+		}
 		$http.get('../rest/produtos/query/descricao/'+descricao).then(
 				function(data) {
 					defer.resolve(data.data);

@@ -5,6 +5,7 @@ testeMod.controller('ProdutoController', ['$scope','$http', '$q','ProdutoService
 	$scope.msg_erro='';
 	$scope.produtos=[];
 	$scope.produto={};
+	$scope.descricao=''; //argumento de pesquisa
 	
 	$scope.edita = function(produto) {
 		$scope.produto = produto;
@@ -77,7 +78,7 @@ testeMod.controller('ProdutoController', ['$scope','$http', '$q','ProdutoService
 					$scope.produtos = data;
 					$scope.msg_error='';
 					$scope.msg_info='Produto excluido com sucesso';
-					$scope.pesquisa($scope.produto.descricao);
+					$scope.pesquisa($scope.descricao);
 				},
 				function(data){ //callback error
 					$scope.msg_error='Erro ao excluir';
