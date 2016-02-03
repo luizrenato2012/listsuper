@@ -52,6 +52,21 @@ public class ProdutoController {
 			return dao.listAll();
 		}
 	}
+	
+	@RequestMapping(value="/delete/{id}", produces="applicaion/json", method=RequestMethod.DELETE)
+	@ResponseBody
+	public ResultadoVO exclui(@PathVariable("id") int id) {
+		ResultadoVO resultado = null;
+		log.info("Excluindo " + id);
+		try{
+			dao.exclui(id);
+			resultado = new ResultadoVO("Produto excluido." , TipoResultado.OK);
+		} catch(Exception e ) {
+			e.printStackTrace();
+			resultado = new ResultadoVO("Produto excluido." , TipoResultado.ERRO_SISTEMA);
+		}
+		return resultado;
+	}
 
 
 	@RequestMapping(value="/save",  method= RequestMethod.POST, produces="application/json")
@@ -63,13 +78,13 @@ public class ProdutoController {
 			log.info("inserindo " + produto.getDescricao());
 			if (produto.getId()!=null && produto.getId()!=0) {
 				dao.update(produto);
-				log.info("Atlerado produto " + produto);
+				log.info("Alterado produto " + produto);
 
 			} else {
 				dao.insert(produto);
 				log.info("Criado produto " + produto);
 			}
-			resultado = new ResultadoVO("criado produto " , TipoResultado.OK);
+			resultado = new ResultadoVO("Produto criado com sucesso." , TipoResultado.OK);
 		} catch(ListSuperException e ) {
 			e.printStackTrace();
 			resultado = new ResultadoVO(e.getMessage() , TipoResultado.ERRO_NEGOCIO);

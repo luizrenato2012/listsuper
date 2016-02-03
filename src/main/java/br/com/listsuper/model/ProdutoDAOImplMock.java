@@ -76,5 +76,14 @@ public class ProdutoDAOImplMock implements ProdutoDAO, Serializable {
 		return false;
 	}
 	
+	public void exclui(int id) {
+		for(Produto produto: this.produtos){
+			if (produto.getId().equals(id)){
+				this.produtos.remove(produto);
+				return;
+			}
+		}
+	}
+	
 
 }

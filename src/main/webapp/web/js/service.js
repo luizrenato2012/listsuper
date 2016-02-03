@@ -3,7 +3,7 @@ var serviceModule = angular.module('ServiceModule',[]);
 serviceModule.service('ProdutoService',['$http','$q', function($http, $q) {
 
 	//var defer = $d.defer();
-	this.recebe = function() {
+	this.lista = function() {
 		var defer = $q.defer();
 		$http({
 			method: 'GET',
@@ -47,6 +47,22 @@ serviceModule.service('ProdutoService',['$http','$q', function($http, $q) {
 				function(data) {
 					defer.reject('Erro ao pesquisar');
 					console.error('Erro ao pesquisar ' + data)
+				}
+		);
+		
+		return defer.promise;
+	}
+	
+	this.exclui = function(id) {
+		var defer = $q.defer();
+		$http.delete('../rest/produtos/delete/'+id).then(
+				function(data) {
+					defer.resolve(data.data);
+					console.log(data);
+				},
+				function(data) {
+					defer.reject('Erro ao excluir');
+					console.error('Erro ao exclui ' + data)
 				}
 		);
 		

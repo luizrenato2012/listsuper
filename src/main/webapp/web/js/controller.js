@@ -11,8 +11,8 @@ testeMod.controller('ProdutoController', ['$scope','$http', '$q','ProdutoService
 	}
 
 	/** recebe produtos */
-	$scope.recebe = function() {
-		ProdutoService.recebe().then(
+	$scope.lista = function() {
+		ProdutoService.lista().then(
 				function(data) {
 					console.log(data);
 					$scope.msg_info='Produtos recebidos com sucesso.';
@@ -66,6 +66,21 @@ testeMod.controller('ProdutoController', ['$scope','$http', '$q','ProdutoService
 				},
 				function(data){ //callback error
 					$scope.msg_error='Erro ao pesquisar';
+					$scope.msg_info='';
+				}
+		);
+	}
+	
+	$scope.exclui = function(id){
+		ProdutoService.exclui(id).then(
+				function(data){ //callback success
+					$scope.produtos = data;
+					$scope.msg_error='';
+					$scope.msg_info='Produto excluido com sucesso';
+					$scope.pesquisa($scope.produto.descricao);
+				},
+				function(data){ //callback error
+					$scope.msg_error='Erro ao excluir';
 					$scope.msg_info='';
 				}
 		);
