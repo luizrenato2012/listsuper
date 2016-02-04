@@ -39,8 +39,9 @@
 				<table ng-show='produtos.length!=0' class='table'>
 					<th>Num</th> <th>Descri&ccedil;&atilde;o</th> <th>...</th> <th>X</th> 
 					<tr ng-repeat='produto in produtos'>
-						<td>{{$index}}</td> <td>{{produto.descricao}}</td> <td><button ng-click='edita(produtos[$index])'> ...</button> </td>
-							<td><button ng-click='exclui(produto.id)'>x </button> </td>
+						<td>{{$index}}</td> <td>{{produto.descricao}}</td> <td>
+						<button ng-click='edita(produtos[$index])' class='btn'> ...</button> </td>
+							<td><button ng-click='exclui(produto.id)' class='btn'>x </button> </td>
 					</tr>
 				</table>
 			</div>

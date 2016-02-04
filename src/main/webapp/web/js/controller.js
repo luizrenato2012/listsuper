@@ -73,6 +73,10 @@ testeMod.controller('ProdutoController', ['$scope','$http', '$q','ProdutoService
 	}
 	
 	$scope.exclui = function(id){
+		if (!confirm('Confirma exclusao do produto?')) {
+			return;
+		}
+		
 		ProdutoService.exclui(id).then(
 				function(data){ //callback success
 					$scope.produtos = data;
