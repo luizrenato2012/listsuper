@@ -4,16 +4,18 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
-@Repository
-public class ProdutoDAOImplMock implements ProdutoDAO, Serializable {
+import br.com.listsuper.controller.ListSuperException;
+
+@Service
+public class ProdutoServiceImplMock implements ProdutoService, Serializable {
 
 	private static final long serialVersionUID = 3563033397080066807L;
 	
 	private List<Produto> produtos;
 	
-	public ProdutoDAOImplMock() {
+	public ProdutoServiceImplMock() {
 		produtos = new ArrayList<Produto>();
 	}
 
@@ -25,7 +27,11 @@ public class ProdutoDAOImplMock implements ProdutoDAO, Serializable {
 	}
 
 	@Override
-	public void delete(Produto p) {
+	public void delete(Integer id) {
+		Produto p = this.load(id);
+		if (p==null){
+			new ListSuperException("Produto " + id + " nao encontrado para exclusão");
+		}
 		this.produtos.remove(p);
 	}
 
@@ -82,6 +88,15 @@ public class ProdutoDAOImplMock implements ProdutoDAO, Serializable {
 				this.produtos.remove(produto);
 				return;
 			}
+		}
+	}
+
+	@Override
+	public void saveOrUpdate(Produto p) {
+		if (p.getId()==null || p.getId()==0) {
+			this.insert(p);
+		} else {
+			this.update(p);
 		}
 	}
 	

@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
+import javax.ejb.EJB;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -16,14 +18,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import br.com.listsuper.model.Produto;
-import br.com.listsuper.model.ProdutoDAOImplMock;
+import br.com.listsuper.model.ProdutoService;
 
 @Controller
 @RequestMapping("/produtos")
 public class ProdutoController {
 
-	@Autowired
-	private ProdutoDAOImplMock dao;
+//	@Autowired
+//	private ProdutoServiceImplMock dao;
+	
+	//@Autowired
+	private ProdutoService produtoService;
+	
 	private Logger log = Logger.getLogger("ProdutoController");
 
 	@RequestMapping(value="/home", method= RequestMethod.GET)
@@ -37,7 +43,7 @@ public class ProdutoController {
 	@ResponseBody
 	public List<Produto> listaTodos() {
 		log.info("Listando " );
-		List<Produto> lista = dao.listAll();
+		List<Produto> lista = produtoService.listAll();
 		log.info("Produtos  " + lista);
 		return lista;
 	}
@@ -47,9 +53,9 @@ public class ProdutoController {
 	public List<Produto> listaPorDescricao(@PathVariable("descricao") String descricao){
 		//log.info("pesquisando " + descricao );
 		if (descricao.trim().equals("TODOS")) {
-			return dao.listAll();
+			return produtoService.listAll();
 		} else {
-			return dao.listByDescricao(descricao);
+			return produtoService.listByDescricao(descricao);
 		}
 	}
 	
@@ -59,7 +65,7 @@ public class ProdutoController {
 		ResultadoVO resultado = null;
 		log.info("Excluindo " + id);
 		try{
-			dao.exclui(id);
+			produtoService.delete(id);
 			resultado = new ResultadoVO("Produto excluido." , TipoResultado.OK);
 		} catch(Exception e ) {
 			e.printStackTrace();
@@ -77,11 +83,11 @@ public class ProdutoController {
 			this.validaDescricao(produto.getDescricao());
 			log.info("inserindo " + produto.getDescricao());
 			if (produto.getId()!=null && produto.getId()!=0) {
-				dao.update(produto);
+				produtoService.update(produto);
 				log.info("Alterado produto " + produto);
 
 			} else {
-				dao.insert(produto);
+				produtoService.insert(produto);
 				log.info("Criado produto " + produto);
 			}
 			resultado = new ResultadoVO("Produto criado com sucesso." , TipoResultado.OK);
@@ -101,17 +107,18 @@ public class ProdutoController {
 			throw new ListSuperException("Descricao invalida");
 		}
 		
-		if (this.dao.isExiste(descricao)) {
-			throw new ListSuperException("Produto já cadastrado");
-		}
+		
 	}
 	
 	@RequestMapping(value="/{id}", produces="application/json", method=RequestMethod.GET)
 	@ResponseBody
 	public Produto carrega(@PathVariable Integer id) {
-		return dao.load(id);
+		return produtoService.load(id);
 	}
 
-
+	public void setProdutoService(ProdutoService produtoService) {
+		this.produtoService = produtoService;
+	}
+	
 
 }

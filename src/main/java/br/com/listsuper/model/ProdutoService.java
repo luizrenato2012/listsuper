@@ -2,13 +2,20 @@ package br.com.listsuper.model;
 
 import java.util.List;
 
+import javax.ejb.Local;
+
 import org.springframework.stereotype.Repository;
 
-public interface ProdutoDAO {
+@Local
+public interface ProdutoService {
 	
 	public void insert(Produto p);
 	
-	public void delete (Produto p);
+	public void update(Produto p);
+	
+	public void saveOrUpdate(Produto p);
+	
+	public void delete (Integer id);
 	
 	public List<Produto> listAll();
 	
@@ -16,6 +23,5 @@ public interface ProdutoDAO {
 	
 	public Produto load(Integer p);
 	
-	public void update(Produto p);
 
 }

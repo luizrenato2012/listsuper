@@ -1,23 +1,37 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:jee="http://www.springframework.org/schema/jee"
-	xmlns:mvc="http://www.springframework.org/schema/mvc" 
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="
         http://www.springframework.org/schema/beans     
-        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
         http://www.springframework.org/schema/context 
-        http://www.springframework.org/schema/context/spring-context-3.0.xsd
-        http://www.springframework.org/schema/jee
-        http://www.springframework.org/schema/jee/spring-jee.xsd
-        http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+        http://www.springframework.org/schema/jee 
+        http://www.springframework.org/schema/jee/spring-jee.xsd 
+        http://www.springframework.org/schema/mvc 
         http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
- 
+
 	<mvc:annotation-driven />
-	<context:component-scan base-package="br.com.listsuper.model, br.com.listsuper.controller" />
-	<jee:jndi-lookup id="myDataSource" jndi-name="java:/listSuperDS"/>
- 	<jee:jndi-lookup id="entityManagerFactory_module" jndi-name="java:comp/env/test/myfact"  expected-type="javax.persistence.EntityManagerFactory"/>   
+	<context:component-scan base-package="br.com.listsuper.controller" />
+	<jee:local-slsb id="produtoService	"
+		jndi-name="java:app/listsuper/produtoServiceDB!br.com.listsuper.model.ProdutoService" 
+		business-interface="br.com.listsuper.model.ProdutoService" />
+		
+	<bean id="produtoServiceImpl"
+		class="org.springframework.ejb.access.LocalStatelessSessionProxyFactoryBean">
+		<property name="jndiName" value="java:app/listsuper/produtoServiceDB!br.com.listsuper.model.ProdutoService" />
+		 <property name="businessInterface" value="br.com.listsuper.model.ProdutoService"/>
+	</bean>	
+
+<!-- <bean id="produtoServiceImpl"
+		class="org.springframework.ejb.access.LocalStatelessSessionProxyFactoryBean">
+		<property name="jndiName" value="java:app/listsuper/produtoServiceDB!br.com.listsuper.model.ProdutoService" />
+		<property name="produtoService" value="br.com.listsuper.model.ProdutoServiceImpl" />
+	</bean>  -->
 	
-<!-- <bean id="dao" class="br.com.listsuper.model.ProdutoDAOImplMock"  scope="singleton" />  -->
- 
+	<bean id="produtoController" class="br.com.listsuper.controller.ProdutoController">
+		<property name="produtoService" ref="produtoServiceImpl" />
+	</bean>
+
 </beans>
