@@ -79,18 +79,20 @@ public class ProdutoController {
 	@ResponseBody
 	public ResultadoVO grava (@RequestBody Produto produto) {
 		ResultadoVO resultado = null;
+		String mensagem="";
 		try {
 			this.validaDescricao(produto.getDescricao());
 			log.info("inserindo " + produto.getDescricao());
 			if (produto.getId()!=null && produto.getId()!=0) {
 				produtoService.update(produto);
 				log.info("Alterado produto " + produto);
-
+				mensagem = "Produto alterado com sucesso.";
 			} else {
 				produtoService.insert(produto);
 				log.info("Criado produto " + produto);
+				mensagem = "Produto criado com sucesso.";
 			}
-			resultado = new ResultadoVO("Produto criado com sucesso." , TipoResultado.OK);
+			resultado = new ResultadoVO(mensagem , TipoResultado.OK);
 		} catch(ListSuperException e ) {
 			e.printStackTrace();
 			resultado = new ResultadoVO(e.getMessage() , TipoResultado.ERRO_NEGOCIO);

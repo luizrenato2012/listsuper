@@ -57,7 +57,7 @@ public class ProdutoServiceImpl implements ProdutoService, Serializable {
 	@Override
 	public List<Produto> listByDescricao(String descricao) {
 		Query query = this.entityManager.createNamedQuery("Produto.listByDescricao");
-		String argumento = "\'%"+ descricao.toUpperCase() + "%\'";
+		String argumento = "%"+ descricao.toUpperCase() + "%";
 		System.out.println("Argumento " + argumento);
 		query.setParameter("descricao", argumento);
 		return query.getResultList();
@@ -70,6 +70,7 @@ public class ProdutoServiceImpl implements ProdutoService, Serializable {
 
 	@Override
 	public void update(Produto p) {
+		p.setDescricao(p.getDescricao().toUpperCase());
 		this.entityManager.merge(p);
 
 	}

@@ -37,7 +37,7 @@
 			<button ng-click='pesquisa(descricao)' class="btn btn-lg btn-primary btn-block">Pesquisa</button>
 			<div class="panel panel-default">
 				<table ng-show='produtos.length!=0' class='table'>
-					<th>Num</th> <th>Descri&ccedil;&atilde;o</th> <th>...</th> <th>X</th> 
+					<th>Num</th> <th>Descri&ccedil;&atilde;o</th> <th>Altera</th> <th>Exclui</th> 
 					<tr ng-repeat='produto in produtos'>
 						<td>{{$index}}</td> <td>{{produto.descricao}}</td> <td>
 						<button ng-click='edita(produtos[$index])' class='btn'> ...</button> </td>
