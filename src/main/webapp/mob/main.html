@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html  lang="pt-BR">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<title>Lista de Compra de Supermercado</title>
+	
+	<link rel="stylesheet" href="../css/bootstrap.css">
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="../css/bootstrap-theme.css">
+	
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="../js/jquery-2.1.3.js"></script>
+	<script src="../js/bootstrap.js"></script>
+	<script src="../js/angular.js"></script>
+	<script src="../js/angular-route.min.js"></script>
+	<script src="../js/angular-locale_pt-br.js"></script>
+	
+    
+<!-- 	<script src="../resources/js/masks.min.js"></script> -->
+	<!--  <script src="../resources/js/ui-utils.js"></script> -->
+	<script src="js/main_controller.js"></script>
+	<script src="js/cadastro_lista_controller.js"></script>
+	<script src="js/cadastro_produto_controller.js"></script>
+	<script src="js/menu_lista_controller.js"></script>
+	<script src="js/selecao_produto_controller.js"></script>
+	<script src="js/cadastro_lista_controller.js"></script>
+	<script src="js/lista_service.js"></script>
+	<script src="js/routes.js"></script>
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body ng-app="RouteModule">
+
+	<ul class="nav nav-pills">
+		<li class="active"><a href="#!/redirect">Home</a></li>
+		<li class="dropdown active"><a class="dropdown-toggle"
+			data-toggle="dropdown" >Op&ccedil;&atilde;o <span class="caret"></span></a>
+			<ul class="dropdown-menu">
+				<li role="presentation"><a href="#!/menu_lista">Lista de Compra</a></li>
+				<li role="presentation"><a href="#">Configuracoes</a></li>
+			</ul></li>
+	</ul>
+	
+	<h4>Lista de Compras de Supermercado</h4>
+	<div ng-view id="ng-view"></div>
+
+</body>
+</html>

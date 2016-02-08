@@ -1,17 +1,16 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Lista de compras de Supermercado</title>
-</head>
-<body>
-	<h1>Selecione </h1>
-	<form>
-		<select>
-			<option>Nova</option>
-		</select>
-		<button>Selecione</button> <br/>
-		<button>Fechar</button> <br/>
-	</form>
-</body>
-</html>
+<!-- <div ng-app='MenuListaControllerMdl'> -->
+<h1>Selecione</h1>
+<form>
+	<select ng-model='listaSelecionada' ng-options='lista.descricao for lista in listas'>
+		<option>Nova</option>
+	</select>
+	
+	<button ng-click='seleciona()'>Seleciona</button>
+	
+	<button>Excluir</button>
+	
+	<br />
+	<button>Fecha</button>
+	<br />
+</form>
+<!-- </div> -->
