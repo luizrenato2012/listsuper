@@ -24,7 +24,7 @@ modulo.controller('SelecaoProdutoController', ['$scope', '$location','ProdutoSer
 				produtosSelecionados.push(produto);
 			}
 		}
-		ListaService.getListaAtual().produtos = produtosSelecionados;
+		ListaService.adicionaSelecionados(produtosSelecionados);
 		$location.path('cadastro_lista');
 	}
 	
