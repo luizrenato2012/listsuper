@@ -1,5 +1,7 @@
-<body>
-	<h3>Sele&ccedil;&atilde;o de Produtos</h3>
+<div class='panel-heading'>
+	<p>Sele&ccedil;&atilde;o de Produtos</p>
+</div>
+<div class="panel-body">
 	<p>
 		<label>Descri&ccedil;&atilde;o</label>
 		<input type="text" name="descricao" />
@@ -9,13 +11,17 @@
 		<input type="radio" name="todos" value="todos">Todos</input>
 		<input type="radio" name="nenhum" value="nenhum">Nenhum</input>
 	</p>	
-	<table>
+	<table class='table'>
 		<tr>
-			<th> </th> <th>Descri&ccedil;&atilde;o </th> <th>X</th>
+			<th>No. </th> <th>Descri&ccedil;&atilde;o </th> <th>...</th>
+		</tr>
+		<tr ng-repeat='produto in produtos'>
+			<td>{{$index}}</td> <td>{{produto.descricao}}</td> <td><input type='checkbox' ng-model='produto.selecionado' 
+										ng-true-value='true' ng-false-value='false'/>    </td>  
 		</tr>
 	</table>
 	<p>
-		<button>Cadastrar</button>
-		<button>Voltar</button>
+		<button class='btn btn-primary'>Cadastrar</button>
+		<button class='btn btn-primary' ng-click='volta()'>Voltar</button>
 	</p>
-</body>
+</div>

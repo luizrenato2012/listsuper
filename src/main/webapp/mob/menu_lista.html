@@ -1,16 +1,18 @@
-<!-- <div ng-app='MenuListaControllerMdl'> -->
-<h1>Selecione</h1>
-<form>
-	<select ng-model='listaSelecionada' ng-options='lista.descricao for lista in listas'>
+<div class='panel-heading'>
+	<p>Selecione uma Lista para Carregar</p>
+</div>
+<div class="panel-body">
+<!-- <h5>Selecione uma Lista para Carregar</h5>  -->
+<form class="form-signin">
+	<select ng-model='listaSelecionada' ng-options='lista.descricao for lista in listas'
+		class='form-control'>
 		<option>Nova</option>
 	</select>
 	
-	<button ng-click='seleciona()'>Seleciona</button>
+	<button ng-click='seleciona()' class='btn btn-lg btn-primary btn-block'>Seleciona</button>
 	
-	<button>Excluir</button>
+	<button class='btn btn-lg btn-primary btn-block'>Excluir</button>
 	
-	<br />
-	<button>Fecha</button>
-	<br />
+	<button class='btn btn-lg btn-primary btn-block'>Fecha</button>
 </form>
-<!-- </div> -->
+</div>

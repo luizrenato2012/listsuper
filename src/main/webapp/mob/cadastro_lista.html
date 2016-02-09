@@ -1,18 +1,27 @@
-	<h3>Lista de Compra de Supermercado</h3>
+<div class='panel-heading'>
+	<p>Montagem da Lista </p>
+</div>
+<div class="panel-body">
 	<p>
-	<label>Data</label> <input type="text" name="data"/>
+	<label>Data</label> <label>{{listaEdicao.dataCriacao | date: 'dd/MM/yyyy hh:mm'}}</label> 
+		<!--  <input type="text" name="data" ng-model='listaEdicao.dataCriacao'/>  -->
 	</p>
 	
+	<h5>Selecione os Produtos da Lista</h5>
 	<p>
-		<button>Escolher</button>
-		<button>Excluir</button>
+		<button ng-click='escolheProduto()' class='btn btn-primary'>Escolher</button>
+		<button class='btn btn-warning'>Excluir</button>
 	</p>
-	<table>
+	<table class='table'>
 		<tr>
-			<th> </th> <th>Descri&ccedil;&atilde;o </th> <th>X</th>
+			<th>No. </th> <th>Descri&ccedil;&atilde;o </th> <th>Comprado</th> <th>Exclui</th>
+		</tr>
+		<tr ng-repeat='produto in listaEdicao.produtos'>
+			<td>{{$index}}</td> <td>{{produto.descricao}}</td> <td>{{produto.comprado}}</td> <td>{{produto.selecionado}}</td>
 		</tr>
 	</table>
 	<br/>
-	<button>Cancela</button>
-	<button>Grava</button>
-	<button>Fecha</button>
+	<button class='btn btn-warning'>Cancela</button>
+	<button class='btn btn-primary'>Grava</button>
+	<button class='btn btn-primary' ng-click='volta()'>Fecha</button>
+</div>

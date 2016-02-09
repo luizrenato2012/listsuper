@@ -1,8 +1,7 @@
 var modulo = angular.module('MenuListaControllerMdl',['ListaServiceMdl']);
 
-modulo.controller('MenuListaController', ['$scope','ListaService',
-                                          function($scope, ListaService){
-	//console.log('criando MenuListaController');
+modulo.controller('MenuListaController', ['$scope','$location','ListaService',
+                                          function($scope,$location, ListaService){
 	
 	$scope.listas = [];
 	$scope.lista = {};
@@ -10,7 +9,8 @@ modulo.controller('MenuListaController', ['$scope','ListaService',
 	
 	$scope.seleciona = function() {
 		console.log('Lista selecionada ' + $scope.listaSelecionada);
-		ListService.seleciona($scope.listaSelecionada);
+		ListaService.seleciona($scope.listaSelecionada);
+		$location.path('cadastro_lista');
 		
 	}
 	

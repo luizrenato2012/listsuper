@@ -1,11 +1,12 @@
 var modulo = angular.module('ListaServiceMdl',[]);
 
-modulo.service('ListaService',[function() {
+modulo.service('ListaService',['$location', function($location) {
 	this.listas = [];
 	this.listaAtual={};
 	
-	this.seleciona(lista) {
+	this.seleciona= function(lista) {
 		this.listaAtual = lista;
+		$location.path('cadastro_lista');
 	}
 	
 	this.insere = function(lista) {
@@ -20,8 +21,11 @@ modulo.service('ListaService',[function() {
 		return this.listas;
 	}
 	
+	this.getListaAtual = function() {
+		return this.listaAtual;
+	}
+	
 	this.init = function() {
-		//console.log('iniciando ListaService');
 		this.listas.push({descricao:"Nova", id: null, dataCriacao: new Date()})
 	}
 	
