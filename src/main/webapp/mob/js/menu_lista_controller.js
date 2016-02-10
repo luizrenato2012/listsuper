@@ -8,14 +8,14 @@ modulo.controller('MenuListaController', ['$scope','$location','ListaService',
 	$scope.listaSelecionada = {};
 	
 	$scope.seleciona = function() {
-		console.log('Lista selecionada ' + $scope.listaSelecionada);
+	//	console.log('Lista selecionada ' + $scope.listaSelecionada);
 		ListaService.seleciona($scope.listaSelecionada);
 		$location.path('cadastro_lista');
 		
 	}
 	
 	$scope.init = function() {
-		console.log('iniciando MenuListaController');
+	//	console.log('iniciando MenuListaController');
 		$scope.listas = ListaService.getListas();
 	}
 	

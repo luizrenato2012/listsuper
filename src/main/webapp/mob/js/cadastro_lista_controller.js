@@ -2,7 +2,7 @@ var modulo = angular.module('CadastroListaControllerMdl',['ListaServiceMdl']);
 
 modulo.controller('CadastroListaController',['$scope', '$location', 'ListaService', 
                                              function($scope,$location, ListaService) {
-	console.log('iniciando CadastroListaController');
+//	console.log('iniciando CadastroListaController');
 	
 	$scope.listaEdicao = {};
 	
@@ -22,14 +22,18 @@ modulo.controller('CadastroListaController',['$scope', '$location', 'ListaServic
 	
 	//exclusao em memoria - SQL via delete
 	$scope.exclui = function() {
-		console.log('excluindo');
-		var i;
-		var produto={};
+//		console.log('excluindo');
 		
-		for(i=0;i < $scope.listaEdicao.produtos.length;i++){
-			produto = $scope.listaEdicao.produtos[i];
+		var produto={};
+		var indice = $scope.listaEdicao.produtos.length-1;
+		
+		while(indice >= 0 ) {
+			produto = $scope.listaEdicao.produtos[indice];
 			if (produto.exclui) {
-				$scope.listaEdicao.produtos.splice(i,1);
+				$scope.listaEdicao.produtos.splice(indice,1);
+				indice = $scope.listaEdicao.produtos.length-1;
+			} else {
+				indice--;
 			}
 		}
 	}

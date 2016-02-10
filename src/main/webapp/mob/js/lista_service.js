@@ -78,4 +78,19 @@ modulo.service('ListaService',['$location', function($location) {
 		}
 	}
 	
+/*	this.findByDescricao = function (descricao) {
+		var i;
+		var produto = {};
+		var listaProdutos = [];
+		descricao = descricao.toUpperCase();
+		
+		for(i=0; i < this.listaAtual.produtos.length; i++) {
+			produto = this.listaAtual.produtos[i]; 
+			if (produto.descricao.indexOf(descricao)!= -1 ) {
+				listaProdutos.push(produto);
+			}
+		}
+		return listaProdutos;
+	}   */
+	
 }]);

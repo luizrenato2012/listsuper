@@ -3,10 +3,11 @@ var modulo = angular.module('SelecaoProdutoControllerMdl',['ProdutoServiceMdl', 
 modulo.controller('SelecaoProdutoController', ['$scope', '$location','ProdutoService', 'ListaService', 
                                                function($scope, $location, ProdutoService, ListaService) {
 	$scope.produtos = [];
+	$scope.descricao = '';
 	
 	$scope.init = function() {
 		$scope.produtos = ProdutoService.getProdutos();
-		console.log('debug');
+	//	console.log('debug');
 	}
 	
 	$scope.init();
@@ -26,6 +27,23 @@ modulo.controller('SelecaoProdutoController', ['$scope', '$location','ProdutoSer
 		}
 		ListaService.adicionaSelecionados(produtosSelecionados);
 		$location.path('cadastro_lista');
+	}
+	
+	$scope.selecionaTodos = function(valor) {
+		var i;
+		$scope.produtos = ProdutoService.getProdutos(); 
+		for(i=0; i < $scope.produtos.length; i++){
+			$scope.produtos[i].selecionado=valor;
+		}
+	}
+	
+	$scope.pesquisaByDescricao = function (descricao) {
+		if (descricao=='') {
+			console.log('Sem argumento');
+			return;
+		}
+		
+		$scope.produtos = ProdutoService.findByDescricao(descricao);
 	}
 	
 }]);

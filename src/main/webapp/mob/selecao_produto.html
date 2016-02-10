@@ -4,12 +4,13 @@
 <div class="panel-body">
 	<p>
 		<label>Descri&ccedil;&atilde;o</label>
-		<input type="text" name="descricao" />
+		<input type="text" name="descricao" ng-model='descricao'/>
+		<button ng-click='pesquisaByDescricao(descricao)' class='btn btn-primary'>Pesquisa</button>
 	</p>
 	<p>
 		<label>Seleciona</label>
-		<input type="radio" name="todos" value="todos">Todos</input>
-		<input type="radio" name="nenhum" value="nenhum">Nenhum</input>
+		<input type="radio" name="selecao" value="todos" ng-click='selecionaTodos(true)'>Todos</input>
+		<input type="radio" name="selecao" value="nenhum" ng-click='selecionaTodos(false)'>Nenhum</input>
 	</p>	
 	<table class='table'>
 		<tr>
