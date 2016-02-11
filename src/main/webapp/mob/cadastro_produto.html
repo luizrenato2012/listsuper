@@ -1,9 +1,15 @@
-<body>
-	<h3>Cadastrar Produto</h3>
-	<p>
-		<label>Descri&ccedil;&atilde;o</label>
-		<input type="text" name="descricao" />
-	</p>
-	<button>Gravar</button> </br>
-	<button>Voltar</button>
-</body>
+<div class='panel-heading'>
+	<p>Cadastro de Produto</p>
+</div>
+<div class="panel-body">
+	<form class='form-signin'>
+		<p>
+			<label>Descri&ccedil;&atilde;o</label> <input type="text"
+				name="descricao" ng-model='descricao' ng-change='limpa()'/>
+		</p>
+		<button ng-click='grava(descricao)' class='btn btn-lg btn-primary btn-block'>Grava</button>
+		</br>
+		<button ng-click='volta()' class='btn btn-lg btn-primary btn-block'>Volta</button>
+		<span>{{mensagem}}</span>
+	</form>
+</div>

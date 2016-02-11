@@ -34,5 +34,12 @@ modulo.service('ProdutoService', [ function() {
 		return listaProdutos;
 	}
 	
+	// substituir p/ implementacao SQL
+	this.insert = function(descricao)  {
+		descricao = descricao.toUpperCase();
+		var proxId = this.produtos.length+1;
+		this.produtos.push({id: proxId, descricao: descricao, selecionado: false});
+	}
+	
 
 }]);

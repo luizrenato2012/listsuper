@@ -7,7 +7,6 @@ modulo.controller('SelecaoProdutoController', ['$scope', '$location','ProdutoSer
 	
 	$scope.init = function() {
 		$scope.produtos = ProdutoService.getProdutos();
-	//	console.log('debug');
 	}
 	
 	$scope.init();
@@ -44,6 +43,10 @@ modulo.controller('SelecaoProdutoController', ['$scope', '$location','ProdutoSer
 		}
 		
 		$scope.produtos = ProdutoService.findByDescricao(descricao);
+	}
+	
+	$scope.cadastraProduto = function() {
+		$location.path('cadastro_produto');
 	}
 	
 }]);
