@@ -5,11 +5,36 @@
 	<form class='form-signin'>
 		<p>
 			<label>Descri&ccedil;&atilde;o</label> <input type="text"
-				name="descricao" ng-model='descricao' ng-change='limpa()'/>
+				name="descricao" ng-model='descricao' ng-change='limpa()' />
 		</p>
-		<button ng-click='grava(descricao)' class='btn btn-lg btn-primary btn-block'>Grava</button>
+		<button ng-click='grava(descricao)'
+			class='btn btn-lg btn-primary btn-block'>Grava</button>
 		</br>
-		<button ng-click='volta()' class='btn btn-lg btn-primary btn-block'>Volta</button>
-		<span>{{mensagem}}</span>
+		<p class='alert-danger' ng-show="mensagem!=''">{{mensagem}}</p>
 	</form>
+	<form class='form-signin'>
+		<p>
+			<label>Descri&ccedil;&atilde;o</label> <input type="text" name="descricao" ng-model='argumento' ng-change='limpa()'/>
+			<button ng-click='pesquisaByDescricao(argumento)'
+				class='btn btn-primary'>Pesquisa</button>
+			<button class='btn btn-warning' ng-click='exclui()'>Excluir</button>	
+		</p>
+		<br/>
+		<table class='table'>
+			<tr>
+				<th>No.</th>
+				<th>Descri&ccedil;&atilde;o</th>
+				<th>Exclui</th>
+			</tr>
+			<tr ng-repeat='produto in produtos'>
+				<td>{{$index}}</td>
+				<td>{{produto.descricao}}</td>
+				<td><input type='checkbox' ng-model='produto.exclui'
+					ng-true-value='true' ng-false-value='false' /></td>
+			</tr>
+		</table>
+		<br/>
+		<button ng-click='volta()' class='btn btn-lg btn-primary btn-block'>Volta</button>
+	</form>
+
 </div>

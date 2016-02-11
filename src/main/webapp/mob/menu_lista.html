@@ -3,11 +3,11 @@
 </div>
 <div class="panel-body">
 <form class="form-signin">
-	<select ng-model='listaSelecionada' ng-options='lista.descricao for lista in listas'
-		class='form-control'>
+	<p class='alert alert-danger' ng-show="mensagem!=''">{{mensagem}}</p>
+	<select ng-model='listaSelecionada' ng-options='lista.descricao for lista in listas' class='form-control' ng-change='limpa()'>
 		<option>Nova</option>
 	</select>
-	
+	<br/>
 	<button ng-click='seleciona()' class='btn btn-lg btn-primary btn-block'>Seleciona</button>
 	
 	<button class='btn btn-lg btn-primary btn-block'>Excluir</button>

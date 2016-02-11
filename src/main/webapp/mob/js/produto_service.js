@@ -3,7 +3,7 @@ var modulo = angular.module('ProdutoServiceMdl',[]);
 modulo.service('ProdutoService', [ function() {
 	this.produtos = [];
 	this.produtosSelecionados = [];
-	
+
 	//SQL pesquisa todos os produtos do backend
 	this.init = function() {
 		this.produtos.push({id: 1, descricao:'PRODUTO 1',selecionado: false});
@@ -12,19 +12,19 @@ modulo.service('ProdutoService', [ function() {
 		this.produtos.push({id: 4, descricao:'PRODUTO 4',selecionado: false});
 		this.produtos.push({id: 5, descricao:'PRODUTO 5',selecionado: false});
 	}
-	
+
 	this.init();
-	
+
 	this.getProdutos = function() {
 		return this.produtos;
 	}
-	
+
 	this.findByDescricao = function (descricao) {
 		var i;
 		var produto = {};
 		var listaProdutos = [];
 		descricao = descricao.toUpperCase();
-		
+
 		for(i=0; i < this.produtos.length; i++) {
 			produto = this.produtos[i]; 
 			if (produto.descricao.indexOf(descricao)!= -1 ) {
@@ -33,13 +33,37 @@ modulo.service('ProdutoService', [ function() {
 		}
 		return listaProdutos;
 	}
-	
+
 	// substituir p/ implementacao SQL
 	this.insert = function(descricao)  {
 		descricao = descricao.toUpperCase();
 		var proxId = this.produtos.length+1;
 		this.produtos.push({id: proxId, descricao: descricao, selecionado: false});
 	}
+
+	/** implementacao SQL a fazer */
+	this.exclui = function(idsExclusao) {
+		var index = this.produtos.length-1;;
+		var i;
+
+		for(i=0; i < idsExclusao.length; i++) {
+			this.excluiProduto(idsExclusao[i]);
+		}
+	}
 	
+	this.excluiProduto = function(id){
+		var index = this.produtos.length-1;
+		var produto= {};
+		
+		while ( index >= 0){
+			produto = this.produtos[index];
+			if (produto.id==id) {
+				this.produtos.splice(index,1);
+				return;
+			}
+			index--;
+		}
+	}
+
 
 }]);
