@@ -1,7 +1,8 @@
 var routeModule = angular.module('RouteModule',['ngRoute',	'CadastroListaControllerMdl',
                                                 			'CadastroProdutoControllerMdl',
                                                 			'MenuListaControllerMdl',
-                                                			'SelecaoProdutoControllerMdl']);
+                                                			'SelecaoProdutoControllerMdl',
+                                                			'ConfiguracoesControllerMdl']);
 
 routeModule.config(['$routeProvider','$locationProvider', function($routeProvider,$locationProvider) {
 	$locationProvider.hashPrefix('!');
@@ -15,4 +16,6 @@ routeModule.config(['$routeProvider','$locationProvider', function($routeProvide
 				{templateUrl : 'menu_lista.html', controller: 'MenuListaController'})
 		.when('/selecao_produto', 
 				{templateUrl: 'selecao_produto.html', controller: 'SelecaoProdutoController'})
+		.when('/configuracoes', 
+				{templateUrl: 'configuracoes.html', controller: 'ConfiguracoesController'})		
 }]);
