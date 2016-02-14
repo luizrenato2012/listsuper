@@ -21,7 +21,13 @@ modulo.controller('MenuListaController', ['$scope','$location','ListaService',
 	
 	$scope.init = function() {
 	//	console.log('iniciando MenuListaController');
-		$scope.listas = ListaService.getListas();
+		ListaService.getListas().then(
+			function(data){
+				$scope.listas = data;
+			}, function(error){
+				console.log(error);
+			}
+		);
 	}
 	
 	$scope.insere = function() {
