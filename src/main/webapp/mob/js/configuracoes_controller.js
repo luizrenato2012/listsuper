@@ -5,6 +5,11 @@ modulo.controller('ConfiguracoesController',['$scope','ProdutoService','LogServi
 	$scope.mensagem='';
 	$scope.descricao='';
 	
+	$scope.init = function() {
+		$scope.mensagem = LogService.getMensagens();
+	}
+	$scope.init();
+	
 	$scope.criaDatabase = function() {
 		ProdutoService.criaDatabase().then(
 				function(data) {
@@ -41,6 +46,17 @@ modulo.controller('ConfiguracoesController',['$scope','ProdutoService','LogServi
 			function(error){
 				console.error(error);
 			}
+		);
+	}
+	
+	$scope.exclui = function(){
+		ProdutoService.exclui([1,2]).then(
+			function(data) {
+				console.log(data);
+			}, 
+			function(error){
+				console.error(error);
+			}	
 		);
 	}
 }]);

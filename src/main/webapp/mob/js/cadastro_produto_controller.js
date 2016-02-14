@@ -1,7 +1,7 @@
-var modulo = angular.module('CadastroProdutoControllerMdl',['ProdutoServiceMdl']);
+var modulo = angular.module('CadastroProdutoControllerMdl',['ProdutoServiceMdl', 'LogServiceMdl']);
 
-modulo.controller('CadastroProdutoController',[			'$scope','$location','ProdutoService',
-                                               function($scope, $location, ProdutoService) {
+modulo.controller('CadastroProdutoController',[			'$scope','$location','ProdutoService','LogService',
+                                               function($scope, $location, ProdutoService, LogService) {
 	$scope.descricao = '';
 	$scope.mensagem ='';
 	$scope.argumento ='';
@@ -16,9 +16,16 @@ modulo.controller('CadastroProdutoController',[			'$scope','$location','ProdutoS
 			$scope.mensagem='Descrição inválida';
 			return;
 		}
-		ProdutoService.insert(descricao);
-		$scope.mensagem = 'Produto gravado com sucesso';
-		$scope.descricao='';
+		ProdutoService.insere(descricao).then(
+				function(data) {
+					$scope.mensagem = 'Produto gravado com sucesso';
+					$scope.descricao='';
+				}, function(error){
+					$scope.mensagem = 'Erro ao incluir';
+					$scope.descricao='';
+				}
+		);
+		
 	}
 	
 	$scope.limpa = function() {
@@ -28,14 +35,40 @@ modulo.controller('CadastroProdutoController',[			'$scope','$location','ProdutoS
 	/** implementacao SQL */
 	$scope.pesquisaByDescricao = function (argumento) {
 		if (argumento=='') {
-			$scope.mensagem = 'Sem argumento para pesquisa.';
-			return;
+			ProdutoService.listAll().then(
+					function(data) {
+						$scope.produtos = data;
+						$scope.mensagem = 'Encontrados ' + $scope.produtos.length + ' produtos';
+					}, function(error){
+						LogService.registra(error);
+					}
+			);
+		} else {
+			ProdutoService.findByDescricao(argumento).then(
+					function(data) {
+						$scope.produtos = data;
+						$scope.mensagem = 'Encontrados ' + $scope.produtos.length + ' produtos';
+					}, function(error){
+						LogService.registra(error);
+					}
+			);
 		}
-		
-		$scope.produtos = ProdutoService.findByDescricao(argumento);
 	}
 	
 	$scope.exclui = function() {
+		
+		ProdutoService.exclui(getIdsExclusao()).then(
+			function(data){
+				this.refreshTela();
+			},function(error){
+				LogService.registra(error);
+			}
+		);
+		
+	}
+	
+	/** retorna id de produtos marcados para exclusao*/
+	this.getIdsExclusao = function()  {
 		var idsExclusao = [];
 		var i;
 		var produto={};
@@ -45,7 +78,11 @@ modulo.controller('CadastroProdutoController',[			'$scope','$location','ProdutoS
 				idsExclusao.push(produto.id);
 			}
 		}
-		ProdutoService.exclui(idsExclusao);
+		return idsExclusao;
+	}
+	
+	/** recarrega produtos previamente pesquisados */
+	this.refreshTela = function() {
 		if ($scope.argumento!=null){
 			$scope.pesquisaByDescricao($scope.argumento);
 		} else if ($scope.produtos.length != 0 ){
