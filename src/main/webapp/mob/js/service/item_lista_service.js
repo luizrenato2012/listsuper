@@ -1,10 +1,11 @@
-var modulo = angular.module('ItemListaMdl',['LogServiceMdl']);
+var modulo = angular.module('ItemListaServiceMdl',['LogServiceMdl']);
 
 modulo.service('ItemListaService',['$q','LogService', function( $q, LogService){
 	var db;
 	
 	this.init = function() {
 		db = openDatabase("listsuperDB", "1.0", "Banco da teste", 200 * 1024);
+		var defer = $q.defer();
 		
 		if (!db) {
 			var msg ='Banco de dados nao inicializado'; 
@@ -17,10 +18,9 @@ modulo.service('ItemListaService',['$q','LogService', function( $q, LogService){
 		db.transaction(function(tx){
 			// na ha suporte a boolean
 			tx.executeSql('create table if not exists item_lista_compra (id integer primary key autoincrement, id_lista_compra integer,'+
-					' descricao varchar (20), selecionado integer);'+
-					' create index idx_descricao on item_lista_compra(descricao);'+
-					' create index idx_id_lista on item_lista_compra(id_lista_compra)',
-						[] , null,null );
+					' descricao varchar (20), selecionado integer)', null, null);
+			tx.executeSql(' create index if not exists idx_descricao on item_lista_compra (descricao)', null, null);
+			tx.executeSql('	create index if not exists idx_id_lista on item_lista_compra (id_lista_compra)', null, null);
 
 		}, function(error) {
 			console.log('Erro ao criar tabela item lista_compra: ' + error.message);
@@ -35,18 +35,43 @@ modulo.service('ItemListaService',['$q','LogService', function( $q, LogService){
 	}
 	
 	this.execInit = function() {
-		this,init().then(
-			function(data){
-				console.log(data);
+		this.init().then(
+			function(){
+				//console.log();
 			}, function(error){
-				console.log(error);
+				//console.log();
 			}	
 		);
 	}
 	
 	this.execInit();
 	
-	this.getItens = function() {
+	this.getItens = function(idLista) {
+		var defer = $q.defer();
 		
+		if(idLista==null){
+			defer.resolve([]);
+			return defer.promise;
+		}
+		
+		db.transacion(function(tx){
+			tx.executeSql('select id, descricao, seleciona from item_lista_compra where id_lista_compra=?',
+					[idLista],
+					function(tx, results){
+						var i, listaItens, item;
+						
+						for(i=0; i < results.rows.length; i++){
+							item = results.rows.item(i);
+							listaItens.push({id:item.id, descricao: item.descricao, selecionado: item.selecionado});
+						}
+						defer.resolve(listaProduto);
+					}, function(error){
+						console.log('Erro ao carregar itens lista ' + error.message);
+						LogService.registra(error.message);
+						defer.reject();
+					}
+			);
+		});
+		return defer.promise;
 	}
 }]);

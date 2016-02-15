@@ -1,6 +1,7 @@
-var modulo = angular.module('ListaServiceMdl',['LogServiceMdl']);
+var modulo = angular.module('ListaServiceMdl',['LogServiceMdl','ItemListaServiceMdl']);
 
-modulo.service('ListaService',['$location', '$q','$filter','LogService', function($location, $q, $filter,LogService ) {
+modulo.service('ListaService',[ '$q','$filter','LogService','ItemListaService', 
+                               function( $q, $filter,LogService, ItemListaService ) {
 	this.listas = [];
 	this.listaAtual={};
 	this.db;
@@ -40,9 +41,9 @@ modulo.service('ListaService',['$location', '$q','$filter','LogService', functio
 	this.execInit = function() {
 		this.init().then(
 			function(data){
-				console.log(data);
+				//console.log(data);
 			}, function(error){
-				console.log(error);
+				//console.log(error);
 			}	
 		);
 	}
@@ -54,7 +55,7 @@ modulo.service('ListaService',['$location', '$q','$filter','LogService', functio
 		var dataFormatada = {};
 		var defer= $q.defer();
 		
-		listaCompras.push({id: null, descricao: 'Nova'});
+		listaCompras.push({id: null, descricao: 'Nova', itens: []});
 		
 		db.transaction(function(tx){
 			tx.executeSql('select id, data from lista_compra ', null, 
@@ -63,7 +64,7 @@ modulo.service('ListaService',['$location', '$q','$filter','LogService', functio
 					for(i=0; i < results.rows.length; i++){
 						dataFormatada = $filter('date')(results.rows.item(i)['data'], 'dd/MM/yyyy HH:mm:ss');
 						listaCompras.push ({id: results.rows.item(i)['id'], 
-											descricao: dataFormatada});
+											descricao: dataFormatada, itens: []});
 					}
 					defer.resolve(listaCompras);
 				},function(error){
@@ -74,13 +75,118 @@ modulo.service('ListaService',['$location', '$q','$filter','LogService', functio
 		return defer.promise;
 	}
 	
-	this.seleciona= function(lista) {
-		this.listaAtual = lista;
-		$location.path('cadastro_lista');
+	this.seleciona = function(lista) {
+		var defer = $q.defer();
+		
+		ItemListaService.getItens( this.listaAtual.id).then(
+			function(data){
+				this.listaAtual = lista;
+				this.listaAtual.itens = data;
+				defer.resolve(this.listaAtual);
+			}, function(error){
+				defer.reject(error);
+				console.log(error);
+			}	
+		);
+		return defer.promise;
+	}
+	
+	// se for update atualiza somente os itens
+	this.grava = function(lista){
+		var defer = $q.defer();
+		
+		if(lista.id==null) {
+			this.getIdGravado().then(
+				function(data){
+					lista.id = data;
+					this.insere(lista).then(
+						function(data){
+							defer.resolve();
+							return defer.promise;
+						}, function(error){
+							defer.reject();
+							return defer.promise;
+						}
+					);
+				}, function(error){
+					defer.reject();
+					return defer.promise;
+				}
+			);
+			
+		} else {
+			this.atualizaItens(lista).then(
+				function(data) {
+					defer.resolve();
+					return defer.promise;
+				}, function(error){
+					defer.reject();
+					return defer.promise;
+				}
+			);
+		}
 	}
 	
 	this.insere = function(lista) {
-		this.listas.push(lista);
+		var defer = $q.defer();
+		var i, item;
+		
+		db.transaction(function(tx){
+			tx.executeSql('insert into lista_compra (data) values (?)', [lista.data],null,null);
+			for(i=0; i < lista.itens; i++) {
+				item = lista.item[i];
+				tx.executeSql('insert into item_lista_compra (id_lista_compra,descricao, selecionado) values (?, ?, ?)', 
+						[lista.id, item.descricao, false],null,null);
+			}
+		},
+		function(error) {
+			LogService.registra('Erro ao inserir ' + error.message);
+			defer.reject();
+		},
+		function(data) {
+			defer.resolve();
+		});
+		return defer.promise;
+	}
+	
+	this.getIdGravado = function (){
+		var defer = $q.defer();
+		
+		db.transaction(function(tx){
+			tx.executeSql('select max(id)+1 as max_id from lista_compra ', null,function(tx, results){
+				defer.resolve(results.rows.item(0)); 
+			},null);
+		},
+		function(error) {
+			LogService.registra('Erro em getIdGravado ' + error.message);
+			defer.reject();
+		}, function(data) {
+			//defer.resolve();
+		});
+		return defer.promise;
+	}
+	
+	//excluir e incluir os itens 
+	this.atualizaItens = function(lista){
+		var defer = $q.defer();
+		
+		db.transaction(function(tx){
+			tx.executeSql('delete from lista_compra where id_lista_compra = ?', [lista.id],null,null);
+			for(i=0; i < lista.itens; i++) {
+				item = lista.item[i];
+				tx.executeSql('insert into item_lista_compra (id_lista_compra,descricao, selecionado) values (?, ?, ?)', 
+						[lista.id, item.descricao, false],null,null);
+			}
+		},
+		function(error) {
+			LogService.registra('Erro ao atualizar itens ' + error.message);
+			defer.reject();
+		},
+		function(data) {
+			defer.resolve();
+		});
+		
+		return defer.promise;
 	}
 	
 	this.exclui = function(lista) {
@@ -101,27 +207,30 @@ modulo.service('ListaService',['$location', '$q','$filter','LogService', functio
 		
 		
 		var totalProdutosInclusao = lista.length;
-		var totalProdutosAtuais = this.listaAtual.produtos.length;
+		if (this.listaAtual.itens==undefined || this.listaAtual.itens==null) {
+			this.listaAtual.itens = [];
+		}
+		var totalProdutosAtuais = this.listaAtual.itens.length;
 		
-		if ( totalProdutosAtuais > 0) {
+		if ( totalProdutosInclusao > 0) {
 			for(i=0; i < totalProdutosInclusao; i++) {
 				produtoInclusao = lista[i];
 				if (!this.jaExiste(produtoInclusao)) {
-					this.listaAtual.produtos.push(produtoInclusao);
+					this.listaAtual.itens.push(produtoInclusao);
 				}
 			}
 		} else {
-			this.listaAtual.produtos = lista;
+			this.listaAtual.itens = lista;
 		}
 		this.retiraSelecao();
 	}
 	
 	this.jaExiste = function(produto) {
 		var j;
-		var totalProdutosAtuais = this.listaAtual.produtos.length;
+		var totalProdutosAtuais = this.listaAtual.itens.length;
 		
 		for(j=0; j < totalProdutosAtuais; j++){
-			produtoAtual = this.listaAtual.produtos[j];
+			produtoAtual = this.listaAtual.itens[j];
 			if ( produto.id == produtoAtual.id){
 				return true;
 			}
@@ -132,8 +241,8 @@ modulo.service('ListaService',['$location', '$q','$filter','LogService', functio
 	this.retiraSelecao = function() {
 		var i;
 		var produto = {};
-		for(i=0; i < this.listaAtual.produtos.length; i++) {
-			produto = this.listaAtual.produtos[i]; 
+		for(i=0; i < this.listaAtual.itens.length; i++) {
+			produto = this.listaAtual.itens[i]; 
 			produto.selecionado = false;
 			produto.exclui = false;
 		}

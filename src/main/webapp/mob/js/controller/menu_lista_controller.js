@@ -14,9 +14,14 @@ modulo.controller('MenuListaController', ['$scope','$location','ListaService',
 			$scope.mensagem='Selecione uma lista válida para editar';
 			return;
 		}
-		ListaService.seleciona($scope.listaSelecionada);
-		$location.path('cadastro_lista');
-		
+		ListaService.seleciona($scope.listaSelecionada).then(
+			function(data) {
+				$scope.listaSelecionada = data;
+				$location.path('cadastro_lista');
+			}, function(error){
+				$scope.mensagem = error;
+			}	
+		);
 	}
 	
 	$scope.init = function() {

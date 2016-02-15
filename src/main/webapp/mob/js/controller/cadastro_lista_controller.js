@@ -5,6 +5,7 @@ modulo.controller('CadastroListaController',['$scope', '$location', 'ListaServic
 //	console.log('iniciando CadastroListaController');
 	
 	$scope.listaEdicao = {};
+	$scope.mensagem;
 	
 	$scope.init = function() {
 		$scope.listaEdicao = ListaService.getListaAtual();
@@ -25,17 +26,28 @@ modulo.controller('CadastroListaController',['$scope', '$location', 'ListaServic
 //		console.log('excluindo');
 		
 		var produto={};
-		var indice = $scope.listaEdicao.produtos.length-1;
+		var indice = $scope.listaEdicao.itens.length-1;
 		
 		while(indice >= 0 ) {
-			produto = $scope.listaEdicao.produtos[indice];
+			produto = $scope.listaEdicao.itens[indice];
 			if (produto.exclui) {
-				$scope.listaEdicao.produtos.splice(indice,1);
-				indice = $scope.listaEdicao.produtos.length-1;
+				$scope.listaEdicao.itens.splice(indice,1);
+				indice = $scope.listaEdicao.itens.length-1;
 			} else {
 				indice--;
 			}
 		}
+	}
+	
+	$scope.grava = function(){
+		ListaService.grava($scope.listaEdicao).then(
+			function(data){
+				$scope.listaEdicao = data;
+				$mensagem = 'Lista atualizada com sucesso';
+			}, function(error){
+				$mensagem='Erro ao atualizar/incluir';
+			}	
+		);
 	}
 	
 	
