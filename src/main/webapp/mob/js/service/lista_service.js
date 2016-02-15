@@ -5,6 +5,7 @@ modulo.service('ListaService',[ '$q','$filter','LogService','ItemListaService',
 	this.listas = [];
 	this.listaAtual={};
 	this.db;
+	this.self = this;
 	
 	this.init = function() {
 		var defer = $q.defer();
@@ -94,23 +95,36 @@ modulo.service('ListaService',[ '$q','$filter','LogService','ItemListaService',
 	// se for update atualiza somente os itens
 	this.grava = function(lista){
 		var defer = $q.defer();
+		var self = this.self;
 		
 		if(lista.id==null) {
 			this.getIdGravado().then(
 				function(data){
-					lista.id = data;
-					this.insere(lista).then(
+					lista.id = data+1;
+					self.insere(lista).then(
 						function(data){
 							defer.resolve();
-							return defer.promise;
+							//return defer.promise;
 						}, function(error){
 							defer.reject();
-							return defer.promise;
+							lista.id =null;
+						//	return defer.promise;
+						}
+					);
+					
+					ItemListaService.insere(lista).then(
+						function(data){
+							defer.resolve();
+						//	return defer.promise;
+						}, function (error){
+							console.log(error);
+							defer.reject();
+						//	return defer.promise;
 						}
 					);
 				}, function(error){
 					defer.reject();
-					return defer.promise;
+				//	return defer.promise;
 				}
 			);
 			
@@ -118,13 +132,14 @@ modulo.service('ListaService',[ '$q','$filter','LogService','ItemListaService',
 			this.atualizaItens(lista).then(
 				function(data) {
 					defer.resolve();
-					return defer.promise;
+				//	return defer.promise;
 				}, function(error){
 					defer.reject();
-					return defer.promise;
+				//	return defer.promise;
 				}
 			);
 		}
+		return defer.promise;
 	}
 	
 	this.insere = function(lista) {
@@ -153,8 +168,9 @@ modulo.service('ListaService',[ '$q','$filter','LogService','ItemListaService',
 		var defer = $q.defer();
 		
 		db.transaction(function(tx){
-			tx.executeSql('select max(id)+1 as max_id from lista_compra ', null,function(tx, results){
-				defer.resolve(results.rows.item(0)); 
+			tx.executeSql('select max(id) from lista_compra ', null,function(tx, results){
+				var id = results.rows.item(0)['max(id)'] ==null ? 0 : results.rows.item(0)['max(id)'];
+				defer.resolve(id); 
 			},null);
 		},
 		function(error) {
@@ -192,8 +208,6 @@ modulo.service('ListaService',[ '$q','$filter','LogService','ItemListaService',
 	this.exclui = function(lista) {
 		this.listas.pop();
 	}
-	
-
 	
 	this.getListaAtual = function() {
 		return this.listaAtual;
