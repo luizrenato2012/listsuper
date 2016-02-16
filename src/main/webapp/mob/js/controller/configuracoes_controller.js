@@ -50,8 +50,13 @@ modulo.controller('ConfiguracoesController',['$scope','ProdutoService','LogServi
 	}
 	
 	$scope.insereItem = function(){
-		var item = {idCompra: 1 , descricao: 'Descricao ', selecionado:true};
-		ItemListaService.insere(item).then(
+		var itens= [{descricao: 'Descricao 1', selecionado:true},
+			        {descricao: 'Descricao 2', selecionado:false},
+			        {descricao: 'Descricao 3', selecionado:false},
+			        {descricao: 'Descricao 4', selecionado:true},
+			        {descricao: 'Descricao 5', selecionado:false}] ;
+		var lista = {id: 1 , itens: itens };
+		ItemListaService.insere(itens).then(
 			function(data) {
 				console.log(data);
 			}, 

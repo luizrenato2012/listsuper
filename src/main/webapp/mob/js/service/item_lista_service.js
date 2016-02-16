@@ -45,19 +45,26 @@ modulo.service('ItemListaService',['$q','LogService', function( $q, LogService){
 	}
 	
 	//  http://stackoverflow.com/questions/4825455/web-sql-database-javascript-loop
-	this.insere = function(item){
-		var defer = $q.defer(),i;
-
-		for (i=0; i < itens.length; i++){
-
+	this.insere = function(itens, idLista){
+		var defer = $q.defer(), item;
+		for (var i=0; i < itens.length ; i++){
+		(function(i) {
+			
 			db.transaction(function(tx){
-
-
+				item = itens[i];
 				tx.executeSql('insert into item_lista_compra (id_lista_compra,descricao, selecionado) values (?, ?, ?)', 
-						[item.idCompra, item.descricao, item.selecionado]);
+						[idLista, item.descricao, item.selecionado]);
+			},function(error) {
+				console.log(' erro ao incluir item ' + item.descricao +': ' + error.message);
+			}, function(data) {
+				console.log(' incluido item '+ item.descricao);
+				if (i == itens.length-1){
+					defer.resolve();
+				}
 			});
-		}
-		defer.resolve();
+		})(i);
+		//	defer.resolve();
+		};
 		return defer.promise;
 	}
 	

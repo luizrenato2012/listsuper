@@ -100,10 +100,11 @@ modulo.service('ListaService',[ '$q','$filter','LogService','ItemListaService',
 		if(lista.id==null) {
 			this.getIdGravado().then(
 				function(data){
-					lista.id = data+1;
 					self.insere(lista).then(
 						function(data){
+							lista.id = data+1;
 							defer.resolve();
+							listaAtual = lista;
 							//return defer.promise;
 						}, function(error){
 							defer.reject();
@@ -112,7 +113,7 @@ modulo.service('ListaService',[ '$q','$filter','LogService','ItemListaService',
 						}
 					);
 					
-					ItemListaService.insere(lista).then(
+					ItemListaService.insere(lista.itens, lista.id).then(
 						function(data){
 							defer.resolve();
 						//	return defer.promise;
@@ -142,17 +143,13 @@ modulo.service('ListaService',[ '$q','$filter','LogService','ItemListaService',
 		return defer.promise;
 	}
 	
+	/** insere lista e itens novos*/
 	this.insere = function(lista) {
 		var defer = $q.defer();
 		var i, item;
-		
+		lista.data = new Date();
 		db.transaction(function(tx){
-			tx.executeSql('insert into lista_compra (data) values (?)', [lista.data],null,null);
-			for(i=0; i < lista.itens; i++) {
-				item = lista.item[i];
-				tx.executeSql('insert into item_lista_compra (id_lista_compra,descricao, selecionado) values (?, ?, ?)', 
-						[lista.id, item.descricao, false],null,null);
-			}
+			tx.executeSql('insert into lista_compra (data) values (?)', [lista.data], null,null);
 		},
 		function(error) {
 			LogService.registra('Erro ao inserir ' + error.message);
@@ -169,7 +166,7 @@ modulo.service('ListaService',[ '$q','$filter','LogService','ItemListaService',
 		
 		db.transaction(function(tx){
 			tx.executeSql('select max(id) from lista_compra ', null,function(tx, results){
-				var id = results.rows.item(0)['max(id)'] ==null ? 0 : results.rows.item(0)['max(id)'];
+				var id = results.rows.item(0)['max(id)'] ==null ? 1 : results.rows.item(0)['max(id)']+1;
 				defer.resolve(id); 
 			},null);
 		},
@@ -210,6 +207,10 @@ modulo.service('ListaService',[ '$q','$filter','LogService','ItemListaService',
 	}
 	
 	this.getListaAtual = function() {
+		if (this.listaAtual.data==null || this.listaAtual.data==null) {
+			this.listaAtual.data = new Date();
+		}
+		this.listaAtual.descricao = $filter('date')(this.listaAtual.data, 'dd/MM/yyyy HH:mm:ss');
 		return this.listaAtual;
 	}
 	
