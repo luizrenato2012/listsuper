@@ -1,7 +1,7 @@
-var modulo = angular.module('ConfiguracoesControllerMdl', ['ProdutoServiceMdl','LogServiceMdl']);
+var modulo = angular.module('ConfiguracoesControllerMdl', ['ProdutoServiceMdl','LogServiceMdl','ItemListaServiceMdl']);
 
-modulo.controller('ConfiguracoesController',['$scope','ProdutoService','LogService',
-                                             function($scope, ProdutoService, LogService){
+modulo.controller('ConfiguracoesController',['$scope','ProdutoService','LogService','ItemListaService',
+                                             function($scope, ProdutoService, LogService, ItemListaService){
 	$scope.mensagem='';
 	$scope.descricao='';
 	
@@ -24,19 +24,19 @@ modulo.controller('ConfiguracoesController',['$scope','ProdutoService','LogServi
 		ProdutoService.verificaSuporteSql();
 	}
 	
-	$scope.insere = function(descricao) {
-		if (descricao==undefined || descricao==''){
-			$mensagem='Descricao invalida';
-			return;
-		}
-		descricao = descricao.toUpperCase();
+//	$scope.insere = function(descricao) {
+//		if (descricao==undefined || descricao==''){
+//			$mensagem='Descricao invalida';
+//			return;
+//		}
+//		descricao = descricao.toUpperCase();
 		
-		ProdutoService.insere(descricao).then(function(data){
-			LogService.registra(data);
-			$scope.mensagem = LogService.getMensagens();
-			$scope.descricao='';
-		});
-	}
+//		ProdutoService.insere(descricao).then(function(data){
+//			LogService.registra(data);
+//			$scope.mensagem = LogService.getMensagens();
+//			$scope.descricao='';
+//		});
+//	}
 	
 	$scope.pesquisa = function(descricao){
 		ProdutoService.findByDescricao(descricao).then(
@@ -49,8 +49,9 @@ modulo.controller('ConfiguracoesController',['$scope','ProdutoService','LogServi
 		);
 	}
 	
-	$scope.exclui = function(){
-		ProdutoService.exclui([1,2]).then(
+	$scope.insereItem = function(){
+		var item = {idCompra: 1 , descricao: 'Descricao ', selecionado:true};
+		ItemListaService.insere(item).then(
 			function(data) {
 				console.log(data);
 			}, 
