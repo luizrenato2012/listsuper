@@ -3,7 +3,7 @@
 </div>
 <div class="panel-body">
 	<p>
-	<label>Data</label> <label>{{listaEdicao.dataCriacao | date: 'dd/MM/yyyy hh:mm'}}</label> 
+	<label>Data</label> <label>{{listaEdicao.descricao}}</label> 
 		<!--  <input type="text" name="data" ng-model='listaEdicao.dataCriacao'/>  -->
 	</p>
 	
@@ -17,11 +17,12 @@
 	
 	<table class='table'>
 		<tr>
-			<th>No. </th> <th>Descri&ccedil;&atilde;o </th> <th>Comprado</th> <th>Exclui</th>
+			<th>No. </th>  <th>Comprado</th> <th>Descri&ccedil;&atilde;o </th> <th>Exclui</th>
 		</tr>
 		<tr ng-repeat='item in listaEdicao.itens'>
-			<td>{{$index}}</td> <td>{{item.descricao}}</td> 
-			<td><input type='checkbox' ng-model='item.selecionado' ng-true-value='true' ng-false-value='false'/>  </td> 
+			<td>{{$index}}</td> 
+			<td><input type='checkbox' ng-model='item.selecionado' ng-true-value='true' ng-false-value='false'/>  </td>
+			<td>{{item.descricao}}</td> 
 			<td><input type='checkbox' ng-model='item.exclui' ng-true-value='true' ng-false-value='false'/> </td>  
 		</tr>
 	</table>

@@ -8,6 +8,7 @@ modulo.service('ListaService',[ '$q','$filter','LogService','ItemListaService',
 	this.self = this;
 	
 	this.init = function() {
+		console.log('ListaService - init '+ new Date());
 		var defer = $q.defer();
 		
 		console.log('ListaService - criando tabela lista_service');
@@ -24,7 +25,7 @@ modulo.service('ListaService',[ '$q','$filter','LogService','ItemListaService',
 		//listas de compra
 		db.transaction(function(tx){
 			// na ha suporte a boolean
-			tx.executeSql('create table if not exists lista_compra (id integer primary key autoincrement, data timestamp)',
+			tx.executeSql('create table if not exists lista_compra (id integer primary key autoincrement, descricao timestamp)',
 						[] , null,null );
 
 		}, function(error) {
@@ -53,113 +54,120 @@ modulo.service('ListaService',[ '$q','$filter','LogService','ItemListaService',
 	
 	this.getListas = function() {
 		var listaCompras = [];
-		var dataFormatada = {};
 		var defer= $q.defer();
 		
 		listaCompras.push({id: null, descricao: 'Nova', itens: []});
 		
 		db.transaction(function(tx){
-			tx.executeSql('select id, data from lista_compra ', null, 
+			tx.executeSql('select id, descricao from lista_compra ', null, 
 				function(tx, results){
 					var i;
 					for(i=0; i < results.rows.length; i++){
-						dataFormatada = $filter('date')(results.rows.item(i)['data'], 'dd/MM/yyyy HH:mm:ss');
+					//	dataFormatada = $filter('date')(results.rows.item(i)['data'], 'dd/MM/yyyy HH:mm:ss');
 						listaCompras.push ({id: results.rows.item(i)['id'], 
-											descricao: dataFormatada, itens: []});
+											descricao: results.rows.item(i)['descricao'], itens: []});
 					}
 					defer.resolve(listaCompras);
-				},function(error){
-					console.error('Erro ao pesquisar ' +error.message);
-					defer.reject(error);
+				},function(data){
+					console.error('Pesquisa de listas ok. ' );
+				}, function(error){
+					defer.reject('Erro ao pesquisar '+ error.message);
 				});
 		});
-		return defer.promise;
-	}
-	
-	this.seleciona = function(lista) {
-		var defer = $q.defer();
-		
-		ItemListaService.getItens( this.listaAtual.id).then(
-			function(data){
-				this.listaAtual = lista;
-				this.listaAtual.itens = data;
-				defer.resolve(this.listaAtual);
-			}, function(error){
-				defer.reject(error);
-				console.log(error);
-			}	
-		);
 		return defer.promise;
 	}
 	
 	// se for update atualiza somente os itens
 	this.grava = function(lista){
 		var defer = $q.defer();
-		var self = this.self;
+		console.log('debug - ListaService  - grava ' + new Date());
 		
 		if(lista.id==null) {
-			this.getIdGravado().then(
-				function(data){
-					self.insere(lista).then(
-						function(data){
-							lista.id = data+1;
-							defer.resolve();
-							listaAtual = lista;
-							//return defer.promise;
-						}, function(error){
-							defer.reject();
-							lista.id =null;
-						//	return defer.promise;
-						}
-					);
-					
-					ItemListaService.insere(lista.itens, lista.id).then(
-						function(data){
-							defer.resolve();
-						//	return defer.promise;
-						}, function (error){
-							console.log(error);
-							defer.reject();
-						//	return defer.promise;
-						}
-					);
-				}, function(error){
-					defer.reject();
-				//	return defer.promise;
+			this.incluiLista(lista).then(
+				function(data) {
+					defer.resolve();
+				}, function (error){
+					defer.rejec();
 				}
 			);
+
 			
 		} else {
 			this.atualizaItens(lista).then(
 				function(data) {
 					defer.resolve();
-				//	return defer.promise;
 				}, function(error){
-					defer.reject();
-				//	return defer.promise;
+					defer.reject(error);
 				}
 			);
+			
 		}
 		return defer.promise;
 	}
-	
-	/** insere lista e itens novos*/
-	this.insere = function(lista) {
+
+	this.incluiLista = function (lista) {
+		var defer = $q.defer();
+		var self = this.self;
+
+		this.getIdGravado().then(
+			function(data){
+				self.insereLista(lista).then(
+					function(data){
+						lista.id = data+1;
+						self.listaAtual = lista;
+						self.insereItens (lista).then(
+							function(data) {
+								console.log('Inseridos itens');	
+							}, function(error){
+								defer.reject();
+							 }
+						);
+						defer.resolve();
+					}, function(error){
+						defer.reject();
+						lista.id =null;
+					//	return defer.promise;
+					}
+				);
+			}, function(error){
+				defer.reject();
+			}	
+		);
+
+		return defer.promise;
+	}
+
+	/** insere lista */
+	this.insereLista = function(lista) {
 		var defer = $q.defer();
 		var i, item;
-		lista.data = new Date();
+		lista.descricao = $filter('date')(new Date(), 'dd/MM/yyyy HH:mm:ss');
 		db.transaction(function(tx){
-			tx.executeSql('insert into lista_compra (data) values (?)', [lista.data], null,null);
-		},
-		function(error) {
+			tx.executeSql('insert into lista_compra (descricao) values (?)', [lista.descricao], null,null);
+		}, function(error) {
 			LogService.registra('Erro ao inserir ' + error.message);
 			defer.reject();
-		},
-		function(data) {
+		}, function(data) {
 			defer.resolve();
 		});
 		return defer.promise;
 	}
+
+	this.insereItens = function (lista){
+		var defer = $q.defer();
+		ItemListaService.insere(lista.itens, lista.id).then(
+			function(data){
+				defer.resolve();
+			//	return defer.promise;
+			}, function (error){
+				LogService.registra('Erro ao inserir item ' + error);
+				defer.reject();
+			//	
+			});
+		return defer.promise;
+	}
+	
+	
 	
 	this.getIdGravado = function (){
 		var defer = $q.defer();
@@ -183,22 +191,13 @@ modulo.service('ListaService',[ '$q','$filter','LogService','ItemListaService',
 	this.atualizaItens = function(lista){
 		var defer = $q.defer();
 		
-		db.transaction(function(tx){
-			tx.executeSql('delete from lista_compra where id_lista_compra = ?', [lista.id],null,null);
-			for(i=0; i < lista.itens; i++) {
-				item = lista.item[i];
-				tx.executeSql('insert into item_lista_compra (id_lista_compra,descricao, selecionado) values (?, ?, ?)', 
-						[lista.id, item.descricao, false],null,null);
+		ItemListaService.atualizaItens(lista.itens, lista.id).then(
+			function(data){
+				defer.resolve();
+			}, function(error){
+				defer.reject(error);
 			}
-		},
-		function(error) {
-			LogService.registra('Erro ao atualizar itens ' + error.message);
-			defer.reject();
-		},
-		function(data) {
-			defer.resolve();
-		});
-		
+		);
 		return defer.promise;
 	}
 	
@@ -207,11 +206,38 @@ modulo.service('ListaService',[ '$q','$filter','LogService','ItemListaService',
 	}
 	
 	this.getListaAtual = function() {
-		if (this.listaAtual.data==null || this.listaAtual.data==null) {
-			this.listaAtual.data = new Date();
+	//	console.log('debug -> Lista - getListaAtual ' + this.listaAtual.id+':' + 
+	//			this.listaAtual.descricao + ' - ' +  new Date());
+		if (this.listaAtual.descricao==null || this.listaAtual.descricao==undefined) {
+		//	console.log('debug -> Lista - getListaAtual - alterando descricao - ' + new Date());
+			this.listaAtual.descricao = $filter('date')(new Date(), 'dd/MM/yyyy HH:mm:ss');
 		}
-		this.listaAtual.descricao = $filter('date')(this.listaAtual.data, 'dd/MM/yyyy HH:mm:ss');
 		return this.listaAtual;
+	}
+	
+	this.teste = function() {
+		console.log('Teste de escopo de função');
+	}
+	
+	this.seleciona = function(lista) {
+		var defer = $q.defer();
+		var self = this.self;
+		
+		
+		ItemListaService.getItens( lista.id, function(item) {
+			lista.itens.push (item);
+		}).then(
+			function(data){
+				console.log('debug - listaservice.seleciona');
+				self.listaAtual = lista;
+			//	self.listaAtual.itens = data;
+				defer.resolve();
+			}, function(error){
+				defer.reject(error);
+				console.log(error);
+			}	
+		);
+		return defer.promise;
 	}
 	
 	/** implementacao especifica p/ objetos em memoria */

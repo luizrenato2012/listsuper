@@ -16,7 +16,7 @@ modulo.controller('MenuListaController', ['$scope','$location','ListaService',
 		}
 		ListaService.seleciona($scope.listaSelecionada).then(
 			function(data) {
-				$scope.listaSelecionada = data;
+				//$scope.listaSelecionada = data;
 				$location.path('cadastro_lista');
 			}, function(error){
 				$scope.mensagem = error;

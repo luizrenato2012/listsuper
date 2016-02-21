@@ -3,7 +3,7 @@ var modulo = angular.module('ConfiguracoesControllerMdl', ['ProdutoServiceMdl','
 modulo.controller('ConfiguracoesController',['$scope','ProdutoService','LogService','ItemListaService',
                                              function($scope, ProdutoService, LogService, ItemListaService){
 	$scope.mensagem='';
-	$scope.descricao='';
+	$scope.descricao='Descricao de teste';
 	
 	$scope.init = function() {
 		$scope.mensagem = LogService.getMensagens();
@@ -64,5 +64,22 @@ modulo.controller('ConfiguracoesController',['$scope','ProdutoService','LogServi
 				console.error(error);
 			}	
 		);
+	}
+	
+	$scope.listaItens = function() {
+		var lista = [];
+		ItemListaService.getItens(1, function(item ){
+			lista.push(item);
+		}).then(
+			function(data){
+				console.log('Executado ');
+			}, function(error){
+				console.log('erro ao listar itens ' + error);
+			}
+		);
+	}
+	
+	$scope.verfica = function(){
+		
 	}
 }]);

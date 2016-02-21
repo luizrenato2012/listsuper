@@ -5,9 +5,10 @@ modulo.controller('CadastroListaController',['$scope', '$location', 'ListaServic
 //	console.log('iniciando CadastroListaController');
 	
 	$scope.listaEdicao = {};
-	$scope.mensagem;
+	$scope.mensagem='';
 	
 	$scope.init = function() {
+		console.log('debug - CadastroLista ' + new Date());
 		$scope.listaEdicao = ListaService.getListaAtual();
 	}
 	
