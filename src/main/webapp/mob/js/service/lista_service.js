@@ -59,7 +59,7 @@ modulo.service('ListaService',[ '$q','$filter','LogService','ItemListaService',
 		listaCompras.push({id: null, descricao: 'Nova', itens: []});
 		
 		db.transaction(function(tx){
-			tx.executeSql('select id, descricao from lista_compra ', null, 
+			tx.executeSql('select id, descricao from lista_compra order by id', null, 
 				function(tx, results){
 					var i;
 					for(i=0; i < results.rows.length; i++){
@@ -80,7 +80,7 @@ modulo.service('ListaService',[ '$q','$filter','LogService','ItemListaService',
 	// se for update atualiza somente os itens
 	this.grava = function(lista){
 		var defer = $q.defer();
-		console.log('debug - ListaService  - grava ' + new Date());
+		console.log('debug - ListaService.grava id lista ' + lista.id);
 		
 		if(lista.id==null) {
 			this.incluiLista(lista).then(
@@ -108,31 +108,51 @@ modulo.service('ListaService',[ '$q','$filter','LogService','ItemListaService',
 	this.incluiLista = function (lista) {
 		var defer = $q.defer();
 		var self = this.self;
-
-		this.getIdGravado().then(
-			function(data){
-				self.insereLista(lista).then(
-					function(data){
-						lista.id = data+1;
-						self.listaAtual = lista;
-						self.insereItens (lista).then(
+		
+		self.insereLista(lista).then(
+				function(data){
+					self.listaAtual = lista;
+					self.insereItens (lista.itens).then(
 							function(data) {
 								console.log('Inseridos itens');	
 							}, function(error){
 								defer.reject();
-							 }
-						);
-						defer.resolve();
-					}, function(error){
-						defer.reject();
-						lista.id =null;
+							}
+					);
+					defer.resolve();
+				}, function(error){
+					defer.reject();
+					lista.id =null;
 					//	return defer.promise;
-					}
-				);
-			}, function(error){
-				defer.reject();
-			}	
+				}
 		);
+		
+//		this.getIdGravado().then(
+//			function(data){
+//				idGerado = data + 1 ;
+//				self.insereLista(lista).then(
+//					function(data){
+//						lista.id = idGerado;
+//						console.log('debug - Lista.incluiLista idGerado ' + idGerado);
+//						self.listaAtual = lista;
+//						self.insereItens (lista).then(
+//							function(data) {
+//								console.log('Inseridos itens');	
+//							}, function(error){
+//								defer.reject();
+//							 }
+//						);
+//						defer.resolve();
+//					}, function(error){
+//						defer.reject();
+//						lista.id =null;
+					//	return defer.promise;
+//					}
+//				);
+//			}, function(error){
+	//			defer.reject();
+//			}	
+//		);
 
 		return defer.promise;
 	}
@@ -153,17 +173,25 @@ modulo.service('ListaService',[ '$q','$filter','LogService','ItemListaService',
 		return defer.promise;
 	}
 
-	this.insereItens = function (lista){
+	this.insereItens = function (itens){
+		
 		var defer = $q.defer();
-		ItemListaService.insere(lista.itens, lista.id).then(
+		
+		this.getIdGravado().then(
 			function(data){
-				defer.resolve();
-			//	return defer.promise;
-			}, function (error){
-				LogService.registra('Erro ao inserir item ' + error);
-				defer.reject();
-			//	
-			});
+				ItemListaService.insere(itens, data).then(
+					function(data){
+						defer.resolve();
+					}, function (error){
+						LogService.registra('Erro ao inserir item ' + error);
+						defer.reject();
+				});
+			},
+			function(error){
+				defer.reject(error);
+			}
+		);
+		
 		return defer.promise;
 	}
 	
@@ -174,7 +202,7 @@ modulo.service('ListaService',[ '$q','$filter','LogService','ItemListaService',
 		
 		db.transaction(function(tx){
 			tx.executeSql('select max(id) from lista_compra ', null,function(tx, results){
-				var id = results.rows.item(0)['max(id)'] ==null ? 1 : results.rows.item(0)['max(id)']+1;
+				var id = results.rows.item(0)['max(id)'] ==null ? 1 : results.rows.item(0)['max(id)'];
 				defer.resolve(id); 
 			},null);
 		},

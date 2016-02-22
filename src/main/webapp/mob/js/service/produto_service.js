@@ -27,6 +27,7 @@ modulo.service('ProdutoService', ['LogService','$q', function(LogService, $q) {
 			// na ha suporte a boolean
 			tx.executeSql('create table if not exists produto (id integer primary key autoincrement, descricao varchar,' +
 					' recebido integer, novo integer)', [] , null,null );
+			tx.executeSql(' create index if not exists idx_descricao_prod on produto (descricao)', null, null);
 
 		}, function(data) {
 			console.log('Erro ao criar tabela produto: ' + data.message);
@@ -46,7 +47,7 @@ modulo.service('ProdutoService', ['LogService','$q', function(LogService, $q) {
 		var listaProdutos = [];
 		
 		db.transaction(function(tx){
-			tx.executeSql('select id, descricao from produto ', null, 
+			tx.executeSql('select id, descricao from produto order by descricao', null, 
 				function(tx, results){
 					var i;
 					for(i=0; i < results.rows.length; i++){

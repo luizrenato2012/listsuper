@@ -44,10 +44,10 @@ modulo.controller('CadastroListaController',['$scope', '$location', 'ListaServic
 		ListaService.grava($scope.listaEdicao).then(
 			function(data){
 				//$scope.listaEdicao = data;
-				$mensagem = 'Lista atualizada com sucesso';
+				$scope.mensagem = 'Lista atualizada com sucesso';
 				this.lista = ListaService.getListaAtual();
 			}, function(error){
-				$mensagem='Erro ao atualizar/incluir';
+				$scope.mensagem='Erro ao atualizar/incluir';
 			}	
 		);
 	}

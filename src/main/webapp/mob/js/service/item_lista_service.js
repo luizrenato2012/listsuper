@@ -51,6 +51,8 @@ modulo.service('ItemListaService',['$q','LogService', function( $q, LogService){
 		if (itens==null || itens==undefined){
 			defer.resolve();
 
+		} else if (idLista == null || idLista == undefined){
+			defer.reject('erro ao incluir item - id lista nulo');
 		} else  {
 			for (var i=0; i < itens.length ; i++){
 			(function(i) {
@@ -86,7 +88,7 @@ modulo.service('ItemListaService',['$q','LogService', function( $q, LogService){
 		}
 		
 		db.transaction(function(tx){
-			tx.executeSql('select id, descricao, selecionado from item_lista_compra where id_lista_compra=?',
+			tx.executeSql('select id, descricao, selecionado from item_lista_compra where id_lista_compra=? order by descricao',
 					[idLista],
 					function(tx, results){
 						var i,  item;
@@ -112,6 +114,7 @@ modulo.service('ItemListaService',['$q','LogService', function( $q, LogService){
 	this.atualizaItens = function(itens, idListaCompra) {
 		var defer = $q.defer();
 		var self = this.self;
+		
 		
 		db.transaction(function(tx){
 			tx.executeSql('delete from item_lista_compra where id_lista_compra = ?', 

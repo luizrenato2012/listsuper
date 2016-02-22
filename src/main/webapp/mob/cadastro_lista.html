@@ -13,15 +13,17 @@
 		<button class='btn btn-warning' ng-click='exclui()'>Excluir</button>
 	</p>
 	
-	<span class='alert alert-info' ng-show="mensagem!=''">{{mensagem}}</span>
+	<br/>
+	<span class='alert alert-info' ng-show="mensagem">{{mensagem}}</span>
+	<br/> <br/>
 	
 	<table class='table'>
 		<tr>
-			<th>No. </th>  <th>Comprado</th> <th>Descri&ccedil;&atilde;o </th> <th>Exclui</th>
+			<th>No. </th>  <th>Marcar</th> <th>Descri&ccedil;&atilde;o </th> <th>X</th>
 		</tr>
 		<tr ng-repeat='item in listaEdicao.itens'>
 			<td>{{$index}}</td> 
-			<td><input type='checkbox' ng-model='item.selecionado' ng-true-value='true' ng-false-value='false'/>  </td>
+			<td><input type='checkbox' ng-model='item.selecionado' ng-true-value='item.selecionado' ng-false-value='!item.selecionado'/>  </td>
 			<td>{{item.descricao}}</td> 
 			<td><input type='checkbox' ng-model='item.exclui' ng-true-value='true' ng-false-value='false'/> </td>  
 		</tr>
