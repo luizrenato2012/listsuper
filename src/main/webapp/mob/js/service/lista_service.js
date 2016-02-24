@@ -63,13 +63,10 @@ modulo.service('ListaService',[ '$q','$filter','LogService','ItemListaService',
 				function(tx, results){
 					var i;
 					for(i=0; i < results.rows.length; i++){
-					//	dataFormatada = $filter('date')(results.rows.item(i)['data'], 'dd/MM/yyyy HH:mm:ss');
 						listaCompras.push ({id: results.rows.item(i)['id'], 
 											descricao: results.rows.item(i)['descricao'], itens: []});
 					}
-					defer.resolve(listaCompras);
-				},function(data){
-					console.error('Pesquisa de listas ok. ' );
+					defer.resolve(listaCompras); 
 				}, function(error){
 					defer.reject('Erro ao pesquisar '+ error.message);
 				});

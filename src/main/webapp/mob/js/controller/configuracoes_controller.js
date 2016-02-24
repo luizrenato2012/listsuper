@@ -1,7 +1,7 @@
-var modulo = angular.module('ConfiguracoesControllerMdl', ['ProdutoServiceMdl','LogServiceMdl','ItemListaServiceMdl']);
+var modulo = angular.module('ConfiguracoesControllerMdl', ['ProdutoServiceMdl','LogServiceMdl','ItemListaServiceMdl','ListaServiceMdl']);
 
-modulo.controller('ConfiguracoesController',['$scope','ProdutoService','LogService','ItemListaService',
-                                             function($scope, ProdutoService, LogService, ItemListaService){
+modulo.controller('ConfiguracoesController',['$scope','ProdutoService','LogService','ItemListaService','ListaService',
+                                             function($scope, ProdutoService, LogService, ItemListaService, ListaService){
 	$scope.mensagem='';
 	$scope.descricao='Descricao de teste';
 	
@@ -79,7 +79,18 @@ modulo.controller('ConfiguracoesController',['$scope','ProdutoService','LogServi
 		);
 	}
 	
-	$scope.verfica = function(){
+	$scope.verifica = function(){
+		var lista= [];
 		
+		ListaService.getListas().then(
+			function(data){
+				lista = data;
+				console.log('data '+ data);
+			}, function(error){
+				console.log('error '+error);
+			}
+		);
+		console.log(lista);
+		console.log('termino');
 	}
 }]);
