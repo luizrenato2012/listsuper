@@ -23,7 +23,7 @@
 		</tr>
 		<tr ng-repeat='item in listaEdicao.itens'>
 			<td>{{$index}}</td> 
-			<td><input type='checkbox' ng-model='item.selecionado' ng-true-value='item.selecionado' ng-false-value='!item.selecionado'/>  </td>
+			<td><input type='checkbox' ng-model='item.selecionado' ng-true-value='true' ng-false-value='false' ng-checked="seleciona"/> {{item.selecionado}} </td>
 			<td>{{item.descricao}}</td> 
 			<td><input type='checkbox' ng-model='item.exclui' ng-true-value='true' ng-false-value='false'/> </td>  
 		</tr>
@@ -32,4 +32,6 @@
 	<button class='btn btn-warning'>Cancela</button>
 	<button class='btn btn-primary' ng-click='grava()'>Grava</button>
 	<button class='btn btn-primary' ng-click='volta()'>Fecha</button>
+	<br/> <br/><p>1.1.6</p>
+	<p>
 </div>

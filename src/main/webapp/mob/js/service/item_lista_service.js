@@ -99,8 +99,6 @@ modulo.service('ItemListaService',['$q','LogService', function( $q, LogService){
 							callbackItens ({id:item.id, descricao: item.descricao, selecionado: item.selecionado});
 						}
 						defer.resolve();
-					}, function(data){
-						defer.resolve();
 					}, function(error){
 						console.log('Erro ao carregar itens lista ' + error.message);
 						LogService.registra(error.message);
