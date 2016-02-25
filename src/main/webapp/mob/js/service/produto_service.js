@@ -1,6 +1,6 @@
 var modulo = angular.module('ProdutoServiceMdl',['LogServiceMdl']);
 
-modulo.service('ProdutoService', ['LogService','$q', function(LogService, $q) {
+modulo.service('ProdutoService', ['LogService','$q','$http', function(LogService, $q, $http) {
 	this.produtos = [];
 	this.produtosSelecionados = [];
 	this.db={};
@@ -139,39 +139,6 @@ modulo.service('ProdutoService', ['LogService','$q', function(LogService, $q) {
 	}
 
 
-	/** pesquisa produtos numa determinada lista */
-//	this.findByDescricao = function (descricao, listaProdutos) {
-//		var i;
-//		var produto = {};
-//		var novaListaProdutos = [];
-//		descricao = descricao.toUpperCase();
-
-//		for(i=0; i < listaProdutos.length; i++) {
-//			produto = listaProdutos[i]; 
-//			if (produto.descricao.indexOf(descricao)!= -1 ) {
-//				novaListaProdutos.push(produto);
-//			}
-//		}
-//		return novaListaProdutos;
-//	}
-
-		// substituir p/ implementacao SQL
-//		this.insert = function(descricao)  {
-//		descricao = descricao.toUpperCase();
-//		var proxId = this.produtos.length+1;
-//		this.produtos.push({id: proxId, descricao: descricao, selecionado: false});
-//		}
-
-		/** implementacao SQL a fazer */
-	//	this.exclui = function(idsExclusao) {
-	//		var index = this.produtos.length-1;;
-	//		var i;
-
-	//		for(i=0; i < idsExclusao.length; i++) {
-	//			this.excluiProduto(idsExclusao[i]);
-	//		}
-	//	}
-		
 	this.exclui = function(idsExclusao) {
 		var defer = $q.defer();
 		var statement = 'delete from produto where id in ( ';
@@ -217,6 +184,56 @@ modulo.service('ProdutoService', ['LogService','$q', function(LogService, $q) {
 //			index--;
 //		}
 //	}
+	
+	/** recebe produtos do backend */
+	this.gravaProdutosImportados = function(produtos) {
+		var i,produto,defer = $q.defer();
+		
+		if (produtos.length==0){
+			defer.reject('Sem produtos para gravar.');
+			return defer.promise;
+		}
+		
+		for(i = 0; i < produtos.length; i++){
+			(function(i){
+				produto = produtos[i];
+				db.transaction(function(tx){
+					tx.executeSql('insert into produto (descricao,novo) values (?,?)',[produto.descricao, false]);
+				}, function(error){
+					LogService.registra(error);
+					defer.reject('Erro ao gravar produtos');
+				}, function(data){
+					defer.resolve();
+				});
+			})(i);
+		}
+		
+		return defer.promise;
+	}
+	
+	// formato de retorno
+	//{"data":[{"id":1,"descricao":"ARROZ","ativo":true},{"id":2,"descricao":"FEIJAO","ativo":true},{"id":3,"descricao":"LEITE","ativo":true},{"id":5,"descricao":"MANTEIGA","ativo":true},{"id":4,"descricao":"PAO","ativo":true}],
+	// "status":200,
+	//"config":{"method":"GET","transformRequest":[null],
+	//"transformResponse":[null],
+	//"url":"../rest/produtos/list",
+	//"headers":{"Accept":"application/json, text/plain, */*"}},"statusText":"OK"}
+	this.importaProdutos = function() {
+		var defer = $q.defer();
+		
+		$http.get('../rest/produtos/list').then(
+			function(success) {
+				console.log('recebendo produtos');
+				defer.resolve(success.data);
+			},
+			function(error){
+				console.log('erro ao receber produtos');
+				defer.reject();
+			}
+		);
+		
+		return defer.promise;
+	}
 
 
 }]);

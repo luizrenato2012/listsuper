@@ -6,7 +6,7 @@ modulo.controller('CadastroListaController',['$scope', '$location', 'ListaServic
 	
 	$scope.listaEdicao = {};
 	$scope.mensagem='';
-	$scope.seleciona = false; 
+	$scope.valorTrue=true;
 	
 	$scope.init = function() {
 		console.log('debug - CadastroLista ' + new Date());
@@ -53,8 +53,5 @@ modulo.controller('CadastroListaController',['$scope', '$location', 'ListaServic
 		);
 	}
 	
-	$scope.selecionaCheck = function (value) {
-		$scope.seleciona = value;
-	}
 	
 }]);

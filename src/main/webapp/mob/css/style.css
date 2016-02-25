@@ -1,0 +1,8 @@
+tr.selecionado_true {
+	background-color: #3366cc;
+}
+
+tr.selecionado_false {
+	background-color: #ffffff;
+}
+

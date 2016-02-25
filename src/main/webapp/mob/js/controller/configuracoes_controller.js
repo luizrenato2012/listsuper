@@ -10,6 +10,23 @@ modulo.controller('ConfiguracoesController',['$scope','ProdutoService','LogServi
 	}
 	$scope.init();
 	
+	$scope.recebeProdutos = function() {
+		LogService.registra('Recebendo produtos...');
+		ProdutoService.importaProdutos().then(
+			function(data){
+				//console.log('produtos  ' + JSON.stringify(data));
+				LogService.registra('Produtos recebidos com sucesso');
+				$scope.mensagem = LogService.getMensagens();
+			},
+			function(error){
+				console.log('erro ao receber produtos');
+				LogService.registra('Erro ao receber produtos ' + error);
+				$scope.mensagem = LogService.getMensagens();
+			}
+		);
+	}
+	
+	
 	$scope.criaDatabase = function() {
 		ProdutoService.criaDatabase().then(
 				function(data) {
