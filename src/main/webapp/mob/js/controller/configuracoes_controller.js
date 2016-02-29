@@ -3,25 +3,28 @@ var modulo = angular.module('ConfiguracoesControllerMdl', ['ProdutoServiceMdl','
 modulo.controller('ConfiguracoesController',['$scope','ProdutoService','LogService','ItemListaService','ListaService',
                                              function($scope, ProdutoService, LogService, ItemListaService, ListaService){
 	$scope.mensagem='';
-	$scope.descricao='Descricao de teste';
+	$scope.mensagemLog='';
 	
 	$scope.init = function() {
-		$scope.mensagem = LogService.getMensagens();
+		$scope.mensagemLog = LogService.getMensagens();
 	}
 	$scope.init();
 	
 	$scope.recebeProdutos = function() {
+		$scope.mensagem='';
 		LogService.registra('Recebendo produtos...');
 		ProdutoService.importaProdutos().then(
 			function(data){
 				//console.log('produtos  ' + JSON.stringify(data));
 				LogService.registra('Produtos recebidos com sucesso');
-				$scope.mensagem = LogService.getMensagens();
+				$scope.mensagem='Produtos recebidos com sucesso.';
+				$scope.mensagemLog = LogService.getMensagens();
 			},
 			function(error){
 				console.log('erro ao receber produtos');
 				LogService.registra('Erro ao receber produtos ' + error);
-				$scope.mensagem = LogService.getMensagens();
+				$scope.mensagem = 'Erro ao receber produtos ';
+				$scope.mensagemLog = LogService.getMensagens();
 			}
 		);
 	}
@@ -31,7 +34,7 @@ modulo.controller('ConfiguracoesController',['$scope','ProdutoService','LogServi
 		ProdutoService.criaDatabase().then(
 				function(data) {
 					LogService.registra(data);
-					$scope.mensagem = LogService.getMensagens();
+					$scope.mensagemLog = LogService.getMensagens();
 				}
 		);
 		console.log('mensagem ' + $scope.mensagem);
@@ -40,20 +43,6 @@ modulo.controller('ConfiguracoesController',['$scope','ProdutoService','LogServi
 	$scope.verificaSuporeSql = function() {
 		ProdutoService.verificaSuporteSql();
 	}
-	
-//	$scope.insere = function(descricao) {
-//		if (descricao==undefined || descricao==''){
-//			$mensagem='Descricao invalida';
-//			return;
-//		}
-//		descricao = descricao.toUpperCase();
-		
-//		ProdutoService.insere(descricao).then(function(data){
-//			LogService.registra(data);
-//			$scope.mensagem = LogService.getMensagens();
-//			$scope.descricao='';
-//		});
-//	}
 	
 	$scope.pesquisa = function(descricao){
 		ProdutoService.findByDescricao(descricao).then(

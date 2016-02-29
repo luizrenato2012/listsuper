@@ -124,33 +124,6 @@ modulo.service('ListaService',[ '$q','$filter','LogService','ItemListaService',
 				}
 		);
 		
-//		this.getIdGravado().then(
-//			function(data){
-//				idGerado = data + 1 ;
-//				self.insereLista(lista).then(
-//					function(data){
-//						lista.id = idGerado;
-//						console.log('debug - Lista.incluiLista idGerado ' + idGerado);
-//						self.listaAtual = lista;
-//						self.insereItens (lista).then(
-//							function(data) {
-//								console.log('Inseridos itens');	
-//							}, function(error){
-//								defer.reject();
-//							 }
-//						);
-//						defer.resolve();
-//					}, function(error){
-//						defer.reject();
-//						lista.id =null;
-					//	return defer.promise;
-//					}
-//				);
-//			}, function(error){
-	//			defer.reject();
-//			}	
-//		);
-
 		return defer.promise;
 	}
 
@@ -193,7 +166,6 @@ modulo.service('ListaService',[ '$q','$filter','LogService','ItemListaService',
 	}
 	
 	
-	
 	this.getIdGravado = function (){
 		var defer = $q.defer();
 		
@@ -231,10 +203,7 @@ modulo.service('ListaService',[ '$q','$filter','LogService','ItemListaService',
 	}
 	
 	this.getListaAtual = function() {
-	//	console.log('debug -> Lista - getListaAtual ' + this.listaAtual.id+':' + 
-	//			this.listaAtual.descricao + ' - ' +  new Date());
 		if (this.listaAtual.descricao==null || this.listaAtual.descricao==undefined) {
-		//	console.log('debug -> Lista - getListaAtual - alterando descricao - ' + new Date());
 			this.listaAtual.descricao = $filter('date')(new Date(), 'dd/MM/yyyy HH:mm:ss');
 		}
 		return this.listaAtual;

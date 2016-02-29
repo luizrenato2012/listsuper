@@ -171,19 +171,60 @@ modulo.service('ProdutoService', ['LogService','$q','$http', function(LogService
 			
 		return defer.promise;
 	}
+	
+	this.importaProdutos = function() {
+		var defer = $q.defer(), produtos = [];
+		var self = this;
+		
+		this.recebeProdutos ().then(
+			function(data){
+				produtos = data;
+				
+				self.excluiTodosProdutos ().then(
+					function(data) {
+						self.gravaProdutosImportados(produtos).then(
+							function(){
+								defer.resolve();
+							}, function(error) {
+								defer.reject();
+							}
+						);
+					}, function(error){
+						defer.reject();
+				});
+			}, function(error){
+				defer.reject(error);
+			}
+		);
+		
+	//	if (produtos==null || produtos== undefined) {
+	///		defer.reject('Sem produtos para receber .');
+	//		return defer.promise;
+	//	}
+		return defer.promise;
+	}
 
-//	this.excluiProduto = function(id){
-//		var index = this.produtos.length-1;
-//		var produto= {};
-//			while ( index >= 0){
-//			produto = this.produtos[index];
-//			if (produto.id==id) {
-//				this.produtos.splice(index,1);
-//				return;
-//			}
-//			index--;
-//		}
-//	}
+	// formato de retorno
+	//{"data":[{"id":1,"descricao":"ARROZ","ativo":true},{"id":2,"descricao":"FEIJAO","ativo":true},{"id":3,"descricao":"LEITE","ativo":true},{"id":5,"descricao":"MANTEIGA","ativo":true},{"id":4,"descricao":"PAO","ativo":true}],
+	// "status":200,
+	this.recebeProdutos = function() {
+		var defer = $q.defer();
+			
+		$http.get('../rest/produtos/list').then(
+			function(success) {
+				console.log('recebendo produtos');
+				defer.resolve(success.data);
+			},
+			function(error){
+				console.log('erro ao receber produtos');
+				LogService.registra('Erro ao receber produtos ' + error);
+				defer.reject();
+			}
+		);
+		
+		return  defer.promise;
+	}
+	
 	
 	/** recebe produtos do backend */
 	this.gravaProdutosImportados = function(produtos) {
@@ -196,44 +237,34 @@ modulo.service('ProdutoService', ['LogService','$q','$http', function(LogService
 		
 		for(i = 0; i < produtos.length; i++){
 			(function(i){
-				produto = produtos[i];
 				db.transaction(function(tx){
+					produto = produtos[i];
 					tx.executeSql('insert into produto (descricao,novo) values (?,?)',[produto.descricao, false]);
 				}, function(error){
-					LogService.registra(error);
+					LogService.registra('Erro ao gravar produtos' + error.message);
 					defer.reject('Erro ao gravar produtos');
 				}, function(data){
 					defer.resolve();
 				});
 			})(i);
 		}
+		return defer.promise;
+	}
+	
+	this.excluiTodosProdutos = function() {
+		var defer = $q.defer();
+		
+		db.transaction(function(tx) {
+			tx.executeSql('delete from produto ',[]);
+		}, function(error) {
+			LogService.registra(error);
+			defer.reject('Erro ao excluir produtos');
+		}, function(data) {
+			defer.resolve();
+		});
 		
 		return defer.promise;
 	}
 	
-	// formato de retorno
-	//{"data":[{"id":1,"descricao":"ARROZ","ativo":true},{"id":2,"descricao":"FEIJAO","ativo":true},{"id":3,"descricao":"LEITE","ativo":true},{"id":5,"descricao":"MANTEIGA","ativo":true},{"id":4,"descricao":"PAO","ativo":true}],
-	// "status":200,
-	//"config":{"method":"GET","transformRequest":[null],
-	//"transformResponse":[null],
-	//"url":"../rest/produtos/list",
-	//"headers":{"Accept":"application/json, text/plain, */*"}},"statusText":"OK"}
-	this.importaProdutos = function() {
-		var defer = $q.defer();
-		
-		$http.get('../rest/produtos/list').then(
-			function(success) {
-				console.log('recebendo produtos');
-				defer.resolve(success.data);
-			},
-			function(error){
-				console.log('erro ao receber produtos');
-				defer.reject();
-			}
-		);
-		
-		return defer.promise;
-	}
-
 
 }]);
