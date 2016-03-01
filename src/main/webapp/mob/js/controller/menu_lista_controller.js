@@ -7,6 +7,7 @@ modulo.controller('MenuListaController', ['$scope','$location','ListaService',
 	$scope.lista = {};
 	$scope.listaSelecionada = {};
 	$scope.mensagem='';
+	$scope.versao = '01/03/2015 18:56';
 	
 	$scope.seleciona = function() {
 	//	console.log('Lista selecionada ' + $scope.listaSelecionada);
@@ -25,28 +26,38 @@ modulo.controller('MenuListaController', ['$scope','$location','ListaService',
 	}
 	
 	$scope.init = function() {
-	//	console.log('iniciando MenuListaController');
-		console.log('debug - MenuListaController.init 1 ');
+	//	console.log('debug - MenuListaController.init 1 ');
 		ListaService.getListas().then(
 			function(data){
 				$scope.listas = data;
-				console.log('debug - MenuListaController.init - 2 '+ data);
 			}, function(error){
 				console.log(error);
 			}
 		);
-		console.log('debug - MenuListaController.init - 3 ');
 	}
 	
 	$scope.insere = function() {
 		ListaService.insere(lista);
 	}
 	
-	$scope.excluir = function() {
-		if ($scope.listaSelecionada.descricao==undefined || $scope.listaSelecionada.id==undefined ) {
+	$scope.excluiLista = function(id) {
+		if (id ==undefined || id==undefined ) {
 			$scope.mensagem='Selecione uma lista válida para excluir';
 			return;
 		}
+		
+		if (!confirm('Confirma exclusao da lista '+ id + '?') ) {
+			return;
+		}
+		
+		ListaService.excluiLista(id).then(
+			function(data){
+				$scope.mensagem='Lista excluida com  sucesso.';
+				$scope.init();
+			}, function(error){
+				$scope.mensagem='Erro ao excluir lista.';
+			}
+		);
 		
 	}
 	

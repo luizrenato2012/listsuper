@@ -9,7 +9,7 @@ modulo.controller('CadastroListaController',['$scope', '$location', 'ListaServic
 	$scope.valorTrue=true;
 	
 	$scope.init = function() {
-		console.log('debug - CadastroLista ' + new Date());
+//		console.log('debug - CadastroLista ' + new Date());
 		$scope.listaEdicao = ListaService.getListaAtual();
 	}
 	

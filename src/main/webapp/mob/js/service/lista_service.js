@@ -198,8 +198,23 @@ modulo.service('ListaService',[ '$q','$filter','LogService','ItemListaService',
 		return defer.promise;
 	}
 	
-	this.exclui = function(lista) {
-		this.listas.pop();
+	/** exclui lista e itens */
+	this.excluiLista = function(id) {
+		var defer = $q.defer();
+		
+		db.transaction(function(tx){
+			tx.executeSql('delete from lista_compra where id = ?', [id], null);
+			tx.executeSql('delete from item_lista_compra where id_lista_compra = ? ', [id], null);
+
+		}, function(error) {
+			console.log('Erro ao excluir lista_compra: ' + error.message);
+			LogService.registra('Erro ao excluir lista_compra: ' + error.message);
+			defer.reject();
+		}, function (data) {
+			defer.resolve();
+		});
+		
+		return defer.promise;
 	}
 	
 	this.getListaAtual = function() {

@@ -37,13 +37,7 @@ modulo.controller('SelecaoProdutoController', ['$scope', '$location','ProdutoSer
 
 	$scope.selecionaTodos = function(valor) {
 		var i;
-		//	ProdutoService.getProdutos().then(
-		//			function(data) {
-		///				$scope.produtos = data;
-		//			}, function(error) {
-		//				LogService.registra(error);
-		//			}
-		//	); 
+		
 		for(i=0; i < $scope.produtos.length; i++){
 			$scope.produtos[i].selecionado=valor;
 		}

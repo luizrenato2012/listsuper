@@ -4,6 +4,7 @@ modulo.service('ProdutoService', ['LogService','$q','$http', function(LogService
 	this.produtos = [];
 	this.produtosSelecionados = [];
 	this.db={};
+	this.telaOrigem;
 
 	//SQL pesquisa todos os produtos do backend
 	this.init = function() {
@@ -266,5 +267,12 @@ modulo.service('ProdutoService', ['LogService','$q','$http', function(LogService
 		return defer.promise;
 	}
 	
+	this.setTelaOrigem(tela) {
+		this.telaOrigem = tela;
+	}
+	
+	this.getTelaOrigem() {
+		return this.telaOrigem;
+	}
 
 }]);
