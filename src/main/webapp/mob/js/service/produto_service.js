@@ -1,6 +1,6 @@
 var modulo = angular.module('ProdutoServiceMdl',['LogServiceMdl']);
 
-modulo.service('ProdutoService', ['LogService','$q','$http', function(LogService, $q, $http) {
+modulo.service('ProdutoService', ['$q','$http','LogService', function( $q, $http, LogService) {
 	this.produtos = [];
 	this.produtosSelecionados = [];
 	this.db={};
@@ -9,12 +9,6 @@ modulo.service('ProdutoService', ['LogService','$q','$http', function(LogService
 	//SQL pesquisa todos os produtos do backend
 	this.init = function() {
 		console.log('produto_service: iniciando... ');
-//		this.produtos.push({id: 1, descricao:'PRODUTO 1',selecionado: false});
-//		this.produtos.push({id: 2, descricao:'PRODUTO 2',selecionado: false});
-//		this.produtos.push({id: 3, descricao:'PRODUTO 3',selecionado: false});
-//		this.produtos.push({id: 4, descricao:'PRODUTO 4',selecionado: false});
-//		this.produtos.push({id: 5, descricao:'PRODUTO 5',selecionado: false});
-		
 		var defer = $q.defer();
 		
 		db = openDatabase("listsuperDB", "1.0", "Banco da teste", 200*1024);
@@ -267,11 +261,11 @@ modulo.service('ProdutoService', ['LogService','$q','$http', function(LogService
 		return defer.promise;
 	}
 	
-	this.setTelaOrigem(tela) {
+	this.setTelaOrigem = function(tela) {
 		this.telaOrigem = tela;
 	}
 	
-	this.getTelaOrigem() {
+	this.getTelaOrigem = function() {
 		return this.telaOrigem;
 	}
 

@@ -1,11 +1,11 @@
-var mainApp = angular.module('MainControllerMdl',['ListaServiceMdl']);
+var mainApp = angular.module('MainControllerMdl',['ProdutoServiceMdl','ControllerConstantsMdl']);
 
-mainApp.controller('MainController' , ['$scope','ControllerConstantsMdl','ProdutoServiceMdl',
-                                       function($scope, ControllerConstantsMdl,ProdutoServiceMdl) {
+mainApp.controller('MainController' , ['$scope','ProdutoService','ORIGEM_TELA_PRODUTO',
+                                       function($scope, ProdutoService, ORIGEM_TELA_PRODUTO) {
 	console.log('criando MenuListaController');
 	
 	$scope.init = function() {
-		ProdutoService.setOrigemTela(ORIGEM_TELA_PRODUTO.MENU);
+		ProdutoService.setTelaOrigem(ORIGEM_TELA_PRODUTO.MENU);
 	}
 	
 }] );

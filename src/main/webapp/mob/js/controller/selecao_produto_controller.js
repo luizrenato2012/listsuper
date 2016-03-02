@@ -1,7 +1,7 @@
-var modulo = angular.module('SelecaoProdutoControllerMdl',['ProdutoServiceMdl', 'ListaServiceMdl','LogServiceMdl']);
+var modulo = angular.module('SelecaoProdutoControllerMdl',['ProdutoServiceMdl', 'ListaServiceMdl','LogServiceMdl','ControllerConstantsMdl']);
 
-modulo.controller('SelecaoProdutoController', ['$scope', '$location','ProdutoService', 'ListaService', 'LogService',
-                                               function($scope, $location, ProdutoService, ListaService, LogService) {
+modulo.controller('SelecaoProdutoController', ['$scope', '$location','ProdutoService', 'ListaService', 'LogService','ORIGEM_TELA_PRODUTO',
+                                               function($scope, $location, ProdutoService, ListaService, LogService, ORIGEM_TELA_PRODUTO) {
 	$scope.produtos = [];
 	$scope.descricao = '';
 
@@ -72,6 +72,7 @@ modulo.controller('SelecaoProdutoController', ['$scope', '$location','ProdutoSer
 	}
 
 	$scope.cadastraProduto = function() {
+		ProdutoService.setTelaOrigem(ORIGEM_TELA_PRODUTO.TELA);
 		$location.path('cadastro_produto');
 	}
 

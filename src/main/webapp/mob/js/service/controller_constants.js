@@ -1,6 +1,6 @@
 var modConstants = angular.module('ControllerConstantsMdl',[]);
 
-moConnstants.constant(
+modConstants.constant(
 	'ORIGEM_TELA_PRODUTO' , {
 		'MENU' : 'menu',
 		'TELA' : 'tela'

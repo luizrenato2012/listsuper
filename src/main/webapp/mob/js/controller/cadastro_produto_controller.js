@@ -1,14 +1,18 @@
-var modulo = angular.module('CadastroProdutoControllerMdl',['ProdutoServiceMdl', 'LogServiceMdl']);
+var modulo = angular.module('CadastroProdutoControllerMdl',['ProdutoServiceMdl', 'LogServiceMdl', 'ControllerConstantsMdl']);
 
 modulo.controller('CadastroProdutoController',[			'$scope','$location','ProdutoService','LogService',
-                                               function($scope, $location, ProdutoService, LogService) {
+                                               			'ORIGEM_TELA_PRODUTO',
+                                               function($scope, $location, ProdutoService, LogService, ORIGEM_TELA_PRODUTO) {
 	$scope.descricao = '';
 	$scope.mensagem ='';
 	$scope.argumento ='';
 	$scope.produtos = [];
 	
 	$scope.volta = function() {
-		$location.path("selecao_produto");
+		
+		if (ProdutoService.getTelaOrigem()==ORIGEM_TELA_PRODUTO.TELA) {
+			$location.path("selecao_produto");
+		}
 	}
 	
 	$scope.grava = function(descricao) {
