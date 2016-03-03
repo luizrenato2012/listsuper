@@ -1,4 +1,4 @@
-var modulo = angular.module('SelecaoProdutoControllerMdl',['ProdutoServiceMdl', 'ListaServiceMdl','LogServiceMdl','ControllerConstantsMdl']);
+var modulo = angular.module('AppMdl',['ProdutoServiceMdl', 'ListaServiceMdl','LogServiceMdl','ControllerConstantsMdl']);
 
 modulo.controller('SelecaoProdutoController', ['$scope', '$location','ProdutoService', 'ListaService', 'LogService','ORIGEM_TELA_PRODUTO',
                                                function($scope, $location, ProdutoService, ListaService, LogService, ORIGEM_TELA_PRODUTO) {

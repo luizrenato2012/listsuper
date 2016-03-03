@@ -1,4 +1,4 @@
-var modulo = angular.module('CadastroProdutoControllerMdl',['ProdutoServiceMdl', 'LogServiceMdl', 'ControllerConstantsMdl']);
+var modulo = angular.module('AppMdl',['ProdutoServiceMdl', 'LogServiceMdl', 'ControllerConstantsMdl']);
 
 modulo.controller('CadastroProdutoController',[			'$scope','$location','ProdutoService','LogService',
                                                			'ORIGEM_TELA_PRODUTO',

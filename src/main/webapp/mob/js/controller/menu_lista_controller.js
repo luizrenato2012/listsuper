@@ -1,4 +1,4 @@
-var modulo = angular.module('MenuListaControllerMdl',['ListaServiceMdl']);
+var modulo = angular.module('AppMdl',['ListaServiceMdl']);
 
 modulo.controller('MenuListaController', ['$scope','$location','ListaService',
                                           function($scope,$location, ListaService){
