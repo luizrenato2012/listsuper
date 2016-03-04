@@ -1,4 +1,4 @@
-var modulo = angular.module('AppMdl',['ListaServiceMdl']);
+var modulo = angular.module('MenuListaControllerMdl',['ListaServiceMdl']);
 
 modulo.controller('MenuListaController', ['$scope','$location','ListaService',
                                           function($scope,$location, ListaService){
@@ -62,7 +62,7 @@ modulo.controller('MenuListaController', ['$scope','$location','ListaService',
 	}
 	
 	$scope.limpa = function() {
-		$scope.mensagem=''
+		$scope.mensagem='';
 	}
 	
 	$scope.init();

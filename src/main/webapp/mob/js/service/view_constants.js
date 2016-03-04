@@ -1,4 +1,4 @@
-var modConstants = angular.module('ControllerConstantsMdl',[]);
+var modConstants = angular.module('ViewConstantsMdl',[]);
 
 modConstants.constant(
 	'ORIGEM_TELA_PRODUTO' , {

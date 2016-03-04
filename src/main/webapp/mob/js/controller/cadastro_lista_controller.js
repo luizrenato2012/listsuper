@@ -1,4 +1,4 @@
-var modulo = angular.module('AppMdl',['ListaServiceMdl']);
+var modulo = angular.module('CadastroListaControllerMdl',['ListaServiceMdl']);
 
 modulo.controller('CadastroListaController',['$scope', '$location', 'ListaService', 
                                              function($scope,$location, ListaService) {
