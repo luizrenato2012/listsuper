@@ -77,7 +77,7 @@ modulo.service('ListaService',[ '$q','$filter','LogService','ItemListaService',
 	// se for update atualiza somente os itens
 	this.grava = function(lista){
 		var defer = $q.defer();
-		console.log('debug - ListaService.grava id lista ' + lista.id);
+	//	console.log('debug - ListaService.grava id lista ' + lista.id);
 		
 		if(lista.id==null) {
 			this.incluiLista(lista).then(
@@ -221,6 +221,7 @@ modulo.service('ListaService',[ '$q','$filter','LogService','ItemListaService',
 		if (this.listaAtual.descricao==null || this.listaAtual.descricao==undefined) {
 			this.listaAtual.descricao = $filter('date')(new Date(), 'dd/MM/yyyy HH:mm:ss');
 		}
+	//	LogService.debug('ListaService.getListaAtual itens: ' + this.listaAtual.itens);
 		return this.listaAtual;
 	}
 	
@@ -250,13 +251,13 @@ modulo.service('ListaService',[ '$q','$filter','LogService','ItemListaService',
 	}
 	
 	/** implementacao especifica p/ objetos em memoria */
-	this.adicionaSelecionados = function(lista) {
+	this.adicionaSelecionados = function(produtoSelecionados) {
 		var i ;
 		var produtoAtual={};
 		var produtoInclusao = {};
 		
 		
-		var totalProdutosInclusao = lista.length;
+		var totalProdutosInclusao = produtoSelecionados.length;
 		if (this.listaAtual.itens==undefined || this.listaAtual.itens==null) {
 			this.listaAtual.itens = [];
 		}
@@ -264,14 +265,14 @@ modulo.service('ListaService',[ '$q','$filter','LogService','ItemListaService',
 		
 		if ( totalProdutosInclusao > 0) {
 			for(i=0; i < totalProdutosInclusao; i++) {
-				produtoInclusao = lista[i];
+				produtoInclusao = produtoSelecionados[i];
 				if (!this.jaExiste(produtoInclusao)) {
 					this.listaAtual.itens.push(produtoInclusao);
 				}
 			}
-		} else {
-			this.listaAtual.itens = lista;
-		}
+		}// else {
+		//	this.listaAtual.itens = produtoSelecionados;
+		//}
 		this.retiraSelecao();
 	}
 	

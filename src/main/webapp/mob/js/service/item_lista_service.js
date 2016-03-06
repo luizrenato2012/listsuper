@@ -65,7 +65,7 @@ modulo.service('ItemListaService',['$q','LogService', function( $q, LogService){
 					console.log(' erro ao incluir item ' + item.descricao +': ' + error.message);
 					defer.reject(' erro ao incluir item ' + item.descricao +': ' + error.message);
 				}, function(data) {
-					console.log(' incluido item '+ item.descricao);
+				//	console.log(' incluido item '+ item.descricao);
 					if (i == itens.length-1){
 						defer.resolve();
 					}

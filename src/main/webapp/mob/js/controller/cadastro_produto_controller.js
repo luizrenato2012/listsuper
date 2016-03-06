@@ -9,8 +9,9 @@ modulo.controller('CadastroProdutoController',[			'$scope','$location','ProdutoS
 	$scope.produtos = [];
 	$scope.exibeVolta;
 	
-	(this.init = function(){
-		console.log('debug cadastrto_produto_controller tela_origem ' + ProdutoService.getTelaOrigem());
+	//inicializacao
+	(function(){
+		//console.log('debug cadastrto_produto_controller tela_origem ' + ProdutoService.getTelaOrigem());
 		$scope.exibeVolta = ProdutoService.getTelaOrigem() == ORIGEM_TELA_PRODUTO.TELA;
 	})();
 	

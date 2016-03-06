@@ -16,4 +16,8 @@ modulo.service('LogService',['$filter','$q', function($filter, $q) {
 		this.mensagens = '';
 	}
 	
+	this.debug = function(msg) {
+		console.log( $filter('date')(new Date(),'HH:mm:ss') + ' - debug - ' + msg);
+	}
+	
 }]);
