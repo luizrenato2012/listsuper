@@ -8,10 +8,10 @@ modulo.service('ListaService',[ '$q','$filter','LogService','ItemListaService',
 	this.self = this;
 	
 	this.init = function() {
-		console.log('ListaService - init '+ new Date());
+	//	console.log('ListaService - init '+ new Date());
 		var defer = $q.defer();
 		
-		console.log('ListaService - criando tabela lista_service');
+	//	console.log('ListaService - criando tabela lista_service');
 		// SQL busca listas no banco e acrescenta a nova
 		//this.listas.push({descricao:"Nova", id: null, dataCriacao: new Date(), produtos: []});
 		db = openDatabase("listsuperDB", "1.0", "Banco da teste", 200*1024);
@@ -34,7 +34,7 @@ modulo.service('ListaService',[ '$q','$filter','LogService','ItemListaService',
 			defer.reject();
 			return defer.promise;
 		}, function (data) {
-			console.log ('Tabela lista_compra criada com sucesso! ' );
+			//console.log ('Tabela lista_compra criada com sucesso! ' );
 		});
 		
 		return defer.promise;
@@ -237,7 +237,7 @@ modulo.service('ListaService',[ '$q','$filter','LogService','ItemListaService',
 			lista.itens.push (item);
 		}).then(
 			function(data){
-				console.log('debug - listaservice.seleciona');
+	//			console.log('debug - listaservice.seleciona');
 				self.listaAtual = lista;
 			//	self.listaAtual.itens = data;
 				defer.resolve();

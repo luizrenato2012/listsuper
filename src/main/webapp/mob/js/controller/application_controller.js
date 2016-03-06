@@ -29,7 +29,11 @@ applicationModule.run(function($rootScope, $route, $routeParams, $location, Prod
 		if (next != undefined && next !=null){
 			var proxRota = next.pathParams;
 			if (proxRota != undefined && proxRota !=null){
-				ProdutoService.setTelaOrigem(proxRota['origem']);
+				var origem = proxRota['origem'];
+				console.log('debug - application_controller.run - origem '+ origem);
+				if (origem != undefined && origem!=null) {
+					ProdutoService.setTelaOrigem(proxRota['origem']);
+				}
 			}
 		}
 		

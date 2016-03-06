@@ -8,7 +8,7 @@ modulo.service('ProdutoService', ['$q','$http','LogService', function( $q, $http
 
 	//SQL pesquisa todos os produtos do backend
 	this.init = function() {
-		console.log('produto_service: iniciando... ');
+	//	console.log('produto_service: iniciando... ');
 		var defer = $q.defer();
 		
 		db = openDatabase("listsuperDB", "1.0", "Banco da teste", 200*1024);

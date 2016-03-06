@@ -72,6 +72,7 @@ modulo.controller('SelecaoProdutoController', ['$scope', '$location','ProdutoSer
 	}
 
 	$scope.cadastraProduto = function() {
+		console.log('debug - selecao_produto_controller.cadastraProduto');
 		ProdutoService.setTelaOrigem(ORIGEM_TELA_PRODUTO.TELA);
 		$location.path('cadastro_produto/tela');
 	}
