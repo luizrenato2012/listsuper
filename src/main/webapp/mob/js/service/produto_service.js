@@ -70,28 +70,103 @@ modulo.service('ProdutoService', ['$q','$http','LogService', function( $q, $http
 		}
 	}
 
-
-
 	this.insere = function(descricao)  {
 		var defer = $q.defer();
 		descricao = descricao.toUpperCase();
-
+		var self = this;
+		
+		this.existeProduto(descricao).then(
+			function(success){
+				if (success.tipo!='OK'){
+					defer.resolve(success);
+				} else {
+					self.insereProduto(descricao).then(
+						function(success) {
+							defer.resolve(success);
+						}, function(error){
+							defer.reject(error);
+						}	
+					);
+				}
+			}, function(error){
+				
+			}	
+		);
+		
+		return defer.promise;
+	}
+	
+	this.existeProduto = function (descricao) {
+		var defer = $q.defer(), existe = false;
+		
+		descricao = descricao.toUpperCase();
+		
+		db.transaction(function(tx){
+			tx.executeSql('select descricao from produto where descricao = ?', [descricao], 
+					function(tx, results){
+						existe = results.rows.length != null && results.rows.length > 0 ;
+						var retorno = {tipo:'', mensagem: ''};
+						retorno.tipo = existe ? 'ERRO_VALIDACAO' : 'OK';
+						retorno.mensagem = existe ? 'Produto '+ descricao + ' já cadastrado local ' :'';
+						defer.resolve(retorno);
+					},function(error){
+						console.error('Erro ao pesquisar ' +error.message);
+						defer.reject(error);
+					});
+		});
+		return defer.promise;
+	}
+	
+	this.insereProduto = function(descricao)  {
+		var defer = $q.defer();
+		descricao = descricao.toUpperCase();
+		var self = this;
+		
 		db.transaction( function (tx) {
 			tx.executeSql('insert into produto (descricao,novo) values (?,?)', [descricao, false])
 		}, function(erro) {
 			var msg = 'Erro ao inserir produto ' + descricao + ' '+ erro.message;
 			console.log(msg);
 			defer.resolve(msg);
-		}
-		, function(data) {
-			var msg = 'Produto inserido com sucesso!' ;
-			console.log(msg);
-			defer.resolve(msg);
+		}, function(data) {
+			var produto = {descricao: descricao};
+			
+			self.enviaProduto(produto).then(
+				function(success){
+					defer.resolve(success);
+				}, function(error){
+					defer.resolve(error);
+				}
+			);
+			
 		});
 		return defer.promise;
 	}
-
-
+	
+	// grava produto no backend
+	this.enviaProduto = function(produto){
+		var defer = $q.defer();
+		
+		$http.post('../rest/produtos/save', produto).then(
+			function(success) {
+				var retorno = '';
+				var tipoMensagem = success.data.tipo;
+				if (tipoMensagem == 'ERRO_SISTEMA') {
+					retorno.descricao = success.data.descricao;
+					retorno.tipo = 'ERRO_SISTEMA';
+				} else {
+					retorno.descricao = 'Produto enviado com sucesso.';
+					retorno.tipo = 'OK';
+				}
+				defer.resolve(retorno);
+			},
+			function(error) {
+				LogService.registra(error);
+				defer.resolve('Erro ao cadastrar produto '+error);
+			}
+		);
+		return defer.promise;
+	}
 	
 	this.findByDescricao = function (descricao) {
 		var defer = $q.defer();
@@ -192,10 +267,6 @@ modulo.service('ProdutoService', ['$q','$http','LogService', function( $q, $http
 			}
 		);
 		
-	//	if (produtos==null || produtos== undefined) {
-	///		defer.reject('Sem produtos para receber .');
-	//		return defer.promise;
-	//	}
 		return defer.promise;
 	}
 

@@ -28,8 +28,12 @@ modulo.controller('CadastroProdutoController',[			'$scope','$location','ProdutoS
 		}
 		ProdutoService.insere(descricao).then(
 				function(data) {
-					$scope.mensagem = 'Produto gravado com sucesso';
 					$scope.descricao='';
+					if (data.tipo=='OK') {
+						$scope.mensagem = 'Produto cadastrado com sucesso';
+					} else {
+						$scope.mensagem = data.mensagem;
+					}
 				}, function(error){
 					$scope.mensagem = 'Erro ao incluir';
 					$scope.descricao='';

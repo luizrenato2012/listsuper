@@ -3,8 +3,11 @@
 </div>
 <div class="panel-body">
 	<p>
-	<label>Data</label> <label>{{listaEdicao.descricao}}</label> 
-		<!--  <input type="text" name="data" ng-model='listaEdicao.dataCriacao'/>  -->
+	<label>Lista: </label> 
+	<label>
+		<span ng-show='listaEdicao.id != null'>{{listaEdicao.id}} -</span>
+		<span> {{listaEdicao.descricao}}</span>
+		</label> 
 	</p>
 	
 	<h5>Selecione os Produtos da Lista</h5>

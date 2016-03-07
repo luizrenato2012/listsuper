@@ -5,9 +5,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
-import javax.ejb.EJB;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,10 +21,6 @@ import br.com.listsuper.model.ProdutoService;
 @RequestMapping("/produtos")
 public class ProdutoController {
 
-//	@Autowired
-//	private ProdutoServiceImplMock dao;
-	
-	//@Autowired
 	private ProdutoService produtoService;
 	
 	private Logger log = Logger.getLogger("ProdutoController");
@@ -51,7 +44,6 @@ public class ProdutoController {
 	@RequestMapping(value="/query/descricao/{descricao}", produces="application/json", method=RequestMethod.GET)
 	@ResponseBody
 	public List<Produto> listaPorDescricao(@PathVariable("descricao") String descricao){
-		//log.info("pesquisando " + descricao );
 		if (descricao.trim().equals("TODOS")) {
 			return produtoService.listAll();
 		} else {

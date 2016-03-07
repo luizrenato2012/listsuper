@@ -21,6 +21,9 @@ applicationModule.config(['$routeProvider','$locationProvider', function($routeP
 				{templateUrl: 'configuracoes.html', controller: 'ConfiguracoesController'})
 		.when('/index', 
 				{templateUrl: 'index.html', controller: 'IndexController'})		
+		.otherwise({
+			redirectTo :'/'
+		});		
 }]);
 
 applicationModule.run(function($rootScope, $route, $routeParams, $location, ProdutoService){

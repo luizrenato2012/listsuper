@@ -4,7 +4,7 @@
 <div class="panel-body">
 <form class="form-signin">
 	<p class='alert alert-danger' ng-show="mensagem!=''">{{mensagem}}</p>
-	<select ng-model='listaSelecionada' ng-options='lista.descricao for lista in listas' class='form-control' ng-change='limpa()'>
+	<select ng-model='listaSelecionada' ng-options="lista.id + ' - ' + lista.descricao for lista in listas" class='form-control' ng-change='limpa()'>
 		<option>Nova</option>
 	</select>
 	<br/>
@@ -12,7 +12,7 @@
 	
 	<button class='btn btn-lg btn-primary btn-block' ng-click='excluiLista(listaSelecionada.id)'>Excluir</button>
 	
-	<button class='btn btn-lg btn-primary btn-block'>Fecha</button>
+	<button class='btn btn-lg btn-primary btn-block' ng-click='fecha()'> Fecha</button>
 	<br/> </br>
 	<p>{{versao}}</p>
 </form>

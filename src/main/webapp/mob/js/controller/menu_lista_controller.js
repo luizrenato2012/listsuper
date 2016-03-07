@@ -7,7 +7,19 @@ modulo.controller('MenuListaController', ['$scope','$location','ListaService',
 	$scope.lista = {};
 	$scope.listaSelecionada = {};
 	$scope.mensagem='';
-	$scope.versao = '01/03/2015 18:56';
+	$scope.versao = '06/03/2015 12:10';
+	
+	//inicializacao
+	(function() {
+	//	console.log('debug - MenuListaController.init 1 ');
+		ListaService.getListas().then(
+			function(data){
+				$scope.listas = data;
+			}, function(error){
+				console.log(error);
+			}
+		);
+	})();
 	
 	$scope.seleciona = function() {
 	//	console.log('Lista selecionada ' + $scope.listaSelecionada);
@@ -25,16 +37,7 @@ modulo.controller('MenuListaController', ['$scope','$location','ListaService',
 		);
 	}
 	
-	$scope.init = function() {
-	//	console.log('debug - MenuListaController.init 1 ');
-		ListaService.getListas().then(
-			function(data){
-				$scope.listas = data;
-			}, function(error){
-				console.log(error);
-			}
-		);
-	}
+
 	
 	$scope.insere = function() {
 		ListaService.insere(lista);
@@ -65,6 +68,9 @@ modulo.controller('MenuListaController', ['$scope','$location','ListaService',
 		$scope.mensagem='';
 	}
 	
-	$scope.init();
+	$scope.fecha = function() {
+		$location.path('/');
+	}
+	
 	
 }]);
