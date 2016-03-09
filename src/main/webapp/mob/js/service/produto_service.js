@@ -149,14 +149,16 @@ modulo.service('ProdutoService', ['$q','$http','LogService', function( $q, $http
 		
 		$http.post('../rest/produtos/save', produto).then(
 			function(success) {
-				var retorno = '';
+				var retorno = {};
 				var tipoMensagem = success.data.tipo;
 				if (tipoMensagem == 'ERRO_SISTEMA') {
 					retorno.descricao = success.data.descricao;
 					retorno.tipo = 'ERRO_SISTEMA';
+					defer.resolve(retorno);
 				} else {
 					retorno.descricao = 'Produto enviado com sucesso.';
 					retorno.tipo = 'OK';
+					defer.resolve(retorno);
 				}
 				defer.resolve(retorno);
 			},

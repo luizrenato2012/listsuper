@@ -32,7 +32,7 @@ modulo.controller('CadastroProdutoController',[			'$scope','$location','ProdutoS
 					if (data.tipo=='OK') {
 						$scope.mensagem = 'Produto cadastrado com sucesso';
 					} else {
-						$scope.mensagem = data.mensagem;
+						$scope.mensagem = data.descricao;
 					}
 				}, function(error){
 					$scope.mensagem = 'Erro ao incluir';
@@ -71,18 +71,20 @@ modulo.controller('CadastroProdutoController',[			'$scope','$location','ProdutoS
 	
 	$scope.exclui = function() {
 		
-		ProdutoService.exclui(getIdsExclusao()).then(
+		ProdutoService.exclui($scope.getIdsExclusao()).then(
 			function(data){
-				this.refreshTela();
+				$scope.refreshTela();
+				$scope.mensagem='Produto(s) excluído(s) com sucesso';
 			},function(error){
 				LogService.registra(error);
+				$scope.mensagem='Erro ao excluir produtos(s)';
 			}
 		);
 		
 	}
 	
 	/** retorna id de produtos marcados para exclusao*/
-	this.getIdsExclusao = function()  {
+	$scope.getIdsExclusao = function()  {
 		var idsExclusao = [];
 		var i;
 		var produto={};
@@ -96,7 +98,7 @@ modulo.controller('CadastroProdutoController',[			'$scope','$location','ProdutoS
 	}
 	
 	/** recarrega produtos previamente pesquisados */
-	this.refreshTela = function() {
+	$scope.refreshTela = function() {
 		if ($scope.argumento!=null){
 			$scope.pesquisaByDescricao($scope.argumento);
 		} else if ($scope.produtos.length != 0 ){
