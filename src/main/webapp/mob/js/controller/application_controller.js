@@ -1,8 +1,13 @@
 var applicationModule = angular.module('ApplicationMdl', ['ngRoute','ProdutoServiceMdl','CadastroListaControllerMdl','CadastroProdutoControllerMdl',
-                                                         'ConfiguracoesControllerMdl','MenuListaControllerMdl','SelecaoProdutoControllerMdl']);
+                                                         'ConfiguracoesControllerMdl','MenuListaControllerMdl','SelecaoProdutoControllerMdl','DaoServiceMdl']);
 
-applicationModule.controller('IndexController', ['$scope', function($scope) {
-	
+
+applicationModule.controller('IndexController', ['$scope', 'DaoService', function($scope, DaoService) {
+	(function(DaoService) {
+		console.log('iniciando Application');
+		//DaoService.getDbConnection();
+	})();
+
 }]);
 
 applicationModule.config(['$routeProvider','$locationProvider', function($routeProvider,$locationProvider) {

@@ -28,7 +28,7 @@ modulo.service('ProdutoService', ['$q','$http','LogService', function( $q, $http
 		}, function(data) {
 			//console.log('Erro ao criar tabela produto: ' + data.message);
 			LogService.registra('Erro ao criar tabela produto: ' + data.message);
-			defer.rejrect('Erro ao criar tabela produto: ' + data.message);
+			defer.reject('Erro ao criar tabela produto: ' + data.message);
 		}, function (data) {
 //			console.log ('Tabela criada com sucesso! ' );
 			LogService.registra('Tabela produtos criada com sucesso!');

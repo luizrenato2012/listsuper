@@ -62,7 +62,8 @@ modulo.service('ItemListaService',['$q','LogService', function( $q, LogService){
 					tx.executeSql('insert into item_lista_compra (id_lista_compra,descricao, selecionado) values (?, ?, ?)', 
 						[idLista, item.descricao, item.selecionado]);
 				},function(error) {
-					console.log(' erro ao incluir item ' + item.descricao +': ' + error.message);
+//					console.log(' erro ao incluir item ' + item.descricao +': ' + error.message);
+					LogService.registra(' erro ao incluir item ' + item.descricao +': ' + error.message);
 					defer.reject(' erro ao incluir item ' + item.descricao +': ' + error.message);
 				}, function(data) {
 				//	console.log(' incluido item '+ item.descricao);
