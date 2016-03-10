@@ -34,7 +34,7 @@ modulo.service('ListaService',[ '$q','$filter','LogService','ItemListaService',
 			defer.reject();
 			return defer.promise;
 		}, function (data) {
-			//console.log ('Tabela lista_compra criada com sucesso! ' );
+			LogService.registra('Tabela lista_compra criada com sucesso! ' );
 		});
 		
 		return defer.promise;
@@ -77,7 +77,6 @@ modulo.service('ListaService',[ '$q','$filter','LogService','ItemListaService',
 	// se for update atualiza somente os itens
 	this.grava = function(lista){
 		var defer = $q.defer();
-	//	console.log('debug - ListaService.grava id lista ' + lista.id);
 		
 		if(lista.id==null) {
 			this.incluiLista(lista).then(
@@ -240,7 +239,6 @@ modulo.service('ListaService',[ '$q','$filter','LogService','ItemListaService',
 			function(data){
 	//			console.log('debug - listaservice.seleciona');
 				self.listaAtual = lista;
-			//	self.listaAtual.itens = data;
 				defer.resolve();
 			}, function(error){
 				defer.reject(error);
@@ -267,13 +265,12 @@ modulo.service('ListaService',[ '$q','$filter','LogService','ItemListaService',
 			for(i=0; i < totalProdutosInclusao; i++) {
 				produtoInclusao = produtoSelecionados[i];
 				if (!this.jaExiste(produtoInclusao)) {
+					produtoInclusao.selecionado = false;
 					this.listaAtual.itens.push(produtoInclusao);
 				}
 			}
-		}// else {
-		//	this.listaAtual.itens = produtoSelecionados;
-		//}
-		this.retiraSelecao();
+		}
+		//this.retiraSelecao();
 	}
 	
 	this.jaExiste = function(produto) {
@@ -282,7 +279,7 @@ modulo.service('ListaService',[ '$q','$filter','LogService','ItemListaService',
 		
 		for(j=0; j < totalProdutosAtuais; j++){
 			produtoAtual = this.listaAtual.itens[j];
-			if ( produto.id == produtoAtual.id){
+			if ( produto.descricao == produtoAtual.descricao){
 				return true;
 			}
 		}
@@ -298,20 +295,5 @@ modulo.service('ListaService',[ '$q','$filter','LogService','ItemListaService',
 			produto.exclui = false;
 		}
 	}
-	
-/*	this.findByDescricao = function (descricao) {
-		var i;
-		var produto = {};
-		var listaProdutos = [];
-		descricao = descricao.toUpperCase();
-		
-		for(i=0; i < this.listaAtual.produtos.length; i++) {
-			produto = this.listaAtual.produtos[i]; 
-			if (produto.descricao.indexOf(descricao)!= -1 ) {
-				listaProdutos.push(produto);
-			}
-		}
-		return listaProdutos;
-	}   */
 	
 }]);

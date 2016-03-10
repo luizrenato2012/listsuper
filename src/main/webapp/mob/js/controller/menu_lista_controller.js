@@ -7,7 +7,7 @@ modulo.controller('MenuListaController', ['$scope','$location','ListaService',
 	$scope.lista = {};
 	$scope.listaSelecionada = {};
 	$scope.mensagem='';
-	$scope.versao = '06/03/2015 12:10';
+	$scope.versao = '10/03/2015 15:26';
 	
 	//inicializacao
 	(function() {
@@ -21,6 +21,7 @@ modulo.controller('MenuListaController', ['$scope','$location','ListaService',
 		);
 	})();
 	
+	/** lista de compras selecionada que sera detalhada na tela de cadastro de lista */
 	$scope.seleciona = function() {
 	//	console.log('Lista selecionada ' + $scope.listaSelecionada);
 		if ($scope.listaSelecionada.descricao==undefined ) {

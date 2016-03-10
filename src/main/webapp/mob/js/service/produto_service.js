@@ -13,23 +13,25 @@ modulo.service('ProdutoService', ['$q','$http','LogService', function( $q, $http
 		
 		db = openDatabase("listsuperDB", "1.0", "Banco da teste", 200*1024);
 		if (!db) {
-			alert('Banco de dados nao inicializado');
+			//alert('Banco de dados nao inicializado');
 			defer.reject('Banco de dados nao inicializado');
+			LogService.registra('Banco de dados nao inicializado');
 			return promise;
 		}
 
 		db.transaction(function(tx){
 			// na ha suporte a boolean
 			tx.executeSql('create table if not exists produto (id integer primary key autoincrement, descricao varchar,' +
-					' recebido integer, novo integer)', [] , null,null );
+					' recebido integer)', [] , null,null );
 			tx.executeSql(' create index if not exists idx_descricao_prod on produto (descricao)', null, null);
 
 		}, function(data) {
-			console.log('Erro ao criar tabela produto: ' + data.message);
+			//console.log('Erro ao criar tabela produto: ' + data.message);
+			LogService.registra('Erro ao criar tabela produto: ' + data.message);
 			defer.rejrect('Erro ao criar tabela produto: ' + data.message);
 		}, function (data) {
-			console.log ('Tabela criada com sucesso! ' );
-			
+//			console.log ('Tabela criada com sucesso! ' );
+			LogService.registra('Tabela produtos criada com sucesso!');
 		});
 		return defer.promise;
 
@@ -51,7 +53,9 @@ modulo.service('ProdutoService', ['$q','$http','LogService', function( $q, $http
 					}
 					defer.resolve(listaProdutos);
 				},function(error){
-					console.error('Erro ao pesquisar ' +error.message);
+					var msg = 'Erro ao criar tabela produto: ' + data.message;
+					console.error(msg);
+					LogService.registra (msg);
 					defer.reject(error);
 				});
 		});
@@ -89,7 +93,7 @@ modulo.service('ProdutoService', ['$q','$http','LogService', function( $q, $http
 					);
 				}
 			}, function(error){
-				
+				LogService.registra(error);
 			}	
 		);
 		
@@ -123,11 +127,12 @@ modulo.service('ProdutoService', ['$q','$http','LogService', function( $q, $http
 		var self = this;
 		
 		db.transaction( function (tx) {
-			tx.executeSql('insert into produto (descricao,novo) values (?,?)', [descricao, false])
+			tx.executeSql('insert into produto (descricao) values (?,?)', [descricao])
 		}, function(erro) {
 			var msg = 'Erro ao inserir produto ' + descricao + ' '+ erro.message;
 			console.log(msg);
 			defer.resolve(msg);
+			LogService.registra(msg);
 		}, function(data) {
 			var produto = {descricao: descricao};
 			
@@ -307,7 +312,7 @@ modulo.service('ProdutoService', ['$q','$http','LogService', function( $q, $http
 			(function(i){
 				db.transaction(function(tx){
 					produto = produtos[i];
-					tx.executeSql('insert into produto (descricao,novo) values (?,?)',[produto.descricao, false]);
+					tx.executeSql('insert into produto (descricao) values (?)',[produto.descricao]);
 				}, function(error){
 					LogService.registra('Erro ao gravar produtos' + error.message);
 					defer.reject('Erro ao gravar produtos');

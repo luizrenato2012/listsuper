@@ -5,19 +5,6 @@ modulo.controller('SelecaoProdutoController', ['$scope', '$location','ProdutoSer
 	$scope.produtos = [];
 	$scope.descricao = '';
 
-	$scope.init = function() {
-		//	ProdutoService.getProdutos().then(
-		//			function(data) {
-		//				$scope.produtos = data;
-		//			}, function(error){
-		//				console.log(error);
-		//				LogService.registra(error);
-		//			}
-		//	);
-	}
-
-	$scope.init();
-
 
 	$scope.volta = function() {
 		var i;

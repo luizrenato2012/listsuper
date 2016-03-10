@@ -28,7 +28,7 @@ modulo.service('ItemListaService',['$q','LogService', function( $q, LogService){
 			LogService.registra('Erro ao criar tabela item lista_compra: ' + error.message);
 			defer.reject();
 		}, function (data) {
-		//	console.log ('Tabela item_lista_compra criada com sucesso! ' );
+			LogService.registra('Tabela item_lista_compra criada com sucesso! ' );
 			defer.resolve();
 		});
 		
