@@ -1,49 +1,53 @@
-var modulo = angular.module('ItemListaServiceMdl',['LogServiceMdl']);
+var modulo = angular.module('ItemListaServiceMdl',['LogServiceMdl','DaoServiceMdl']);
 
-modulo.service('ItemListaService',['$q','LogService', function( $q, LogService){
+modulo.service('ItemListaService',['$q','LogService', 'DaoService', function( $q, LogService, DaoService){
 	var db;
 	this.self = this;
 	
-	this.init = function() {
-		db = openDatabase("listsuperDB", "1.0", "Banco da teste", 200 * 1024);
-		var defer = $q.defer();
-		
-		if (!db) {
-			var msg ='Banco de dados nao inicializado'; 
-			alert(msg);
-			LogService.registra(msg);
-			defer.reject();
-			return defer.promise;
-		}
-		//listas de compra
-		db.transaction(function(tx){
-			// na ha suporte a boolean
-			tx.executeSql('create table if not exists item_lista_compra (id integer primary key autoincrement, id_lista_compra integer,'+
-					' descricao varchar (20), selecionado integer)', null, null);
-			tx.executeSql(' create index if not exists idx_descricao on item_lista_compra (descricao)', null, null);
-			tx.executeSql('	create index if not exists idx_id_lista on item_lista_compra (id_lista_compra)', null, null);
-
-		}, function(error) {
-			console.log('Erro ao criar tabela item lista_compra: ' + error.message);
-			LogService.registra('Erro ao criar tabela item lista_compra: ' + error.message);
-			defer.reject();
-		}, function (data) {
-			LogService.registra('Tabela item_lista_compra criada com sucesso! ' );
-			defer.resolve();
-		});
-		
-		return defer.promise;
-	}
+	(function(){
+		self.db = DaoService.getDb();
+	})();
 	
-	this.execInit = function() {
-		this.init().then(
-			function(){
-				//console.log();
-			}, function(error){
-				//console.log();
-			}	
-		);
-	}
+//	this.init = function() {
+//		db = openDatabase("listsuperDB", "1.0", "Banco da teste", 200 * 1024);
+//		var defer = $q.defer();
+//		
+//		if (!db) {
+//			var msg ='Banco de dados nao inicializado'; 
+//			alert(msg);
+//			LogService.registra(msg);
+//			defer.reject();
+//			return defer.promise;
+//		}
+//		//listas de compra
+//		db.transaction(function(tx){
+//			// na ha suporte a boolean
+//			tx.executeSql('create table if not exists item_lista_compra (id integer primary key autoincrement, id_lista_compra integer,'+
+//					' descricao varchar (20), selecionado integer)', null, null);
+//			tx.executeSql(' create index if not exists idx_descricao on item_lista_compra (descricao)', null, null);
+//			tx.executeSql('	create index if not exists idx_id_lista on item_lista_compra (id_lista_compra)', null, null);
+//
+//		}, function(error) {
+//			console.log('Erro ao criar tabela item lista_compra: ' + error.message);
+//			LogService.registra('Erro ao criar tabela item lista_compra: ' + error.message);
+//			defer.reject();
+//		}, function (data) {
+//			LogService.registra('Tabela item_lista_compra criada com sucesso! ' );
+//			defer.resolve();
+//		});
+//		
+//		return defer.promise;
+//	}
+	
+//	this.execInit = function() {
+//		this.init().then(
+//			function(){
+//				//console.log();
+//			}, function(error){
+//				//console.log();
+//			}	
+//		);
+//	}
 	
 	//  http://stackoverflow.com/questions/4825455/web-sql-database-javascript-loop
 	this.insere = function(itens, idLista){
@@ -77,7 +81,7 @@ modulo.service('ItemListaService',['$q','LogService', function( $q, LogService){
 		return defer.promise;
 	}
 	
-	this.execInit();
+//	this.execInit();
 	
 	this.getItens = function(idLista, callbackItens) {
 		var defer = $q.defer();

@@ -1,56 +1,54 @@
-var modulo = angular.module('ListaServiceMdl',['LogServiceMdl','ItemListaServiceMdl']);
+var modulo = angular.module('ListaServiceMdl',['LogServiceMdl','ItemListaServiceMdl','DaoServiceMdl']);
 
-modulo.service('ListaService',[ '$q','$filter','LogService','ItemListaService', 
-                               function( $q, $filter,LogService, ItemListaService ) {
+modulo.service('ListaService',[ '$q','$filter','LogService','ItemListaService', 'DaoService',
+                               function( $q, $filter,LogService, ItemListaService, DaoService ) {
 	this.listas = [];
 	this.listaAtual={};
 	this.db;
 	this.self = this;
 	
-	this.init = function() {
-	//	console.log('ListaService - init '+ new Date());
-		var defer = $q.defer();
-		
-	//	console.log('ListaService - criando tabela lista_service');
-		// SQL busca listas no banco e acrescenta a nova
-		//this.listas.push({descricao:"Nova", id: null, dataCriacao: new Date(), produtos: []});
-		db = openDatabase("listsuperDB", "1.0", "Banco da teste", 200*1024);
-		if (!db) {
-			var msg ='Banco de dados nao inicializado'; 
-			alert(msg);
-			LogService.registra(msg);
-			defer.reject();
-			return defer.promise;
-		}
-		//listas de compra
-		db.transaction(function(tx){
-			// na ha suporte a boolean
-			tx.executeSql('create table if not exists lista_compra (id integer primary key autoincrement, descricao timestamp)',
-						[] , null,null );
-
-		}, function(error) {
-			console.log('Erro ao criar tabela lista_compra: ' + error.message);
-			LogService.registra('Erro ao criar tabela lista_compra: ' + error.message);
-			defer.reject();
-			return defer.promise;
-		}, function (data) {
-			LogService.registra('Tabela lista_compra criada com sucesso! ' );
-		});
-		
-		return defer.promise;
-	}
+	(function(){
+		self.db = DaoService.getDb();
+	})();	
 	
-	this.execInit = function() {
-		this.init().then(
-			function(data){
-				//console.log(data);
-			}, function(error){
-				//console.log(error);
-			}	
-		);
-	}
+//	this.init = function() {
+//		var defer = $q.defer();
+//		
+//		db = openDatabase("listsuperDB", "1.0", "Banco da teste", 200*1024);
+//		if (!db) {
+//			var msg ='Banco de dados nao inicializado'; 
+//			alert(msg);
+//			LogService.registra(msg);
+//			defer.reject();
+//			return defer.promise;
+//		}
+//		db.transaction(function(tx){
+//			tx.executeSql('create table if not exists lista_compra (id integer primary key autoincrement, descricao timestamp)',
+//						[] , null,null );
+//
+//		}, function(error) {
+//			console.log('Erro ao criar tabela lista_compra: ' + error.message);
+//			LogService.registra('Erro ao criar tabela lista_compra: ' + error.message);
+//			defer.reject();
+//			return defer.promise;
+//		}, function (data) {
+//			LogService.registra('Tabela lista_compra criada com sucesso! ' );
+//		});
+//		
+//		return defer.promise;
+//	}
 	
-	this.execInit();
+//	this.execInit = function() {
+//		this.init().then(
+//			function(data){
+//				//console.log(data);
+//			}, function(error){
+//				//console.log(error);
+//			}	
+//		);
+//	}
+	
+//	this.execInit();
 	
 	this.getListas = function() {
 		var listaCompras = [];

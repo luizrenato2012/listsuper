@@ -1,41 +1,41 @@
-var modulo = angular.module('ProdutoServiceMdl',['LogServiceMdl']);
+var modulo = angular.module('ProdutoServiceMdl',['LogServiceMdl','DaoServiceMdl']);
 
-modulo.service('ProdutoService', ['$q','$http','LogService', function( $q, $http, LogService) {
+modulo.service('ProdutoService', ['$q','$http','LogService','DaoService', function( $q, $http, LogService, DaoService) {
 	this.produtos = [];
 	this.produtosSelecionados = [];
 	this.db={};
 	this.telaOrigem;
+	var self = this;
 
+	//inicializacao 
+	(function(){
+		self.db = DaoService.getDb();
+	})();
 	//SQL pesquisa todos os produtos do backend
-	this.init = function() {
-	//	console.log('produto_service: iniciando... ');
-		var defer = $q.defer();
-		
-		db = openDatabase("listsuperDB", "1.0", "Banco da teste", 200*1024);
-		if (!db) {
-			//alert('Banco de dados nao inicializado');
-			defer.reject('Banco de dados nao inicializado');
-			LogService.registra('Banco de dados nao inicializado');
-			return promise;
-		}
-
-		db.transaction(function(tx){
-			// na ha suporte a boolean
-			tx.executeSql('create table if not exists produto (id integer primary key autoincrement, descricao varchar,' +
-					' recebido integer)', [] , null,null );
-			tx.executeSql(' create index if not exists idx_descricao_prod on produto (descricao)', null, null);
-
-		}, function(data) {
-			//console.log('Erro ao criar tabela produto: ' + data.message);
-			LogService.registra('Erro ao criar tabela produto: ' + data.message);
-			defer.reject('Erro ao criar tabela produto: ' + data.message);
-		}, function (data) {
-//			console.log ('Tabela criada com sucesso! ' );
-			LogService.registra('Tabela produtos criada com sucesso!');
-		});
-		return defer.promise;
-
-	}
+//	this.init = function() {
+//		var defer = $q.defer();
+//		
+//		db = openDatabase("listsuperDB", "1.0", "Banco da teste", 200*1024);
+//		if (!db) {
+//			defer.reject('Banco de dados nao inicializado');
+//			LogService.registra('Banco de dados nao inicializado');
+//			return promise;
+//		}
+//
+//		db.transaction(function(tx){
+//			tx.executeSql('create table if not exists produto (id integer primary key autoincrement, descricao varchar,' +
+//					' recebido integer)', [] , null,null );
+//			tx.executeSql(' create index if not exists idx_descricao_prod on produto (descricao)', null, null);
+//
+//		}, function(data) {
+//			LogService.registra('Erro ao criar tabela produto: ' + data.message);
+//			defer.reject('Erro ao criar tabela produto: ' + data.message);
+//		}, function (data) {
+//			LogService.registra('Tabela produtos criada com sucesso!');
+//		});
+//		return defer.promise;
+//
+//	}
 
 
 	this.listAll = function () {
@@ -62,8 +62,6 @@ modulo.service('ProdutoService', ['$q','$http','LogService', function( $q, $http
 		return defer.promise;
 	}
 	
-	this.init();
-
 	this.verificaSuporteSql = function() {
 		if (window.openDatabase) {
 			console.log('Suporte Web SQL ativo');

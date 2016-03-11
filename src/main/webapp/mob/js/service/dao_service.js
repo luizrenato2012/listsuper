@@ -107,11 +107,9 @@ modulo.service('DaoService',['LogService','$q', function(LogService,$q) {
 	
 	this.init();
 	
-	this.getDbConnection = function() {
-		console.log('executando getDbConnection');
+	this.getDb = function() {
 		return db;
 	}
-	
 	
 	
 }]);
