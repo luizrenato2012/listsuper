@@ -26,9 +26,9 @@
 		</tr>
 		<tr ng-repeat='item in listaEdicao.itens' class='selecionado_{{item.selecionado}}'>
 			<td>{{$index}}</td> 
-			<td><input type='checkbox' ng-model='item.selecionado' ng-true-value='true' ng-false-value='false' /> {{item.selecionado}} </td>
+			<td><input type='checkbox' ng-model='item.selecionado' ng-true-value='true' ng-false-value='false' ng-click='limpaMensagem()' /> {{item.selecionado}} </td>
 			<td>{{item.descricao}}</td> 
-			<td><input type='checkbox' ng-model='item.exclui'      ng-true-value='true' ng-false-value='false'/> </td>  
+			<td><input type='checkbox' ng-model='item.exclui'      ng-true-value='true' ng-false-value='false' ng-click='limpaMensagem()'/> </td>  
 		</tr>
 	</table>
 	<br/>

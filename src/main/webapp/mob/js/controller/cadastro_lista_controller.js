@@ -9,8 +9,8 @@ modulo.controller('CadastroListaController',['$scope', '$location', 'ListaServic
 	$scope.valorTrue=true;
 	
 	$scope.init = function() {
-//		console.log('debug - CadastroLista ' + new Date());
 		$scope.listaEdicao = ListaService.getListaAtual();
+		$scope.mensagem='';
 	}
 	
 	$scope.init();
@@ -22,6 +22,11 @@ modulo.controller('CadastroListaController',['$scope', '$location', 'ListaServic
 	$scope.escolheProduto = function() {
 		$location.path("selecao_produto");
 	}
+	
+	$scope.limpaMensagem = function() {
+		$scope.mensagem='';
+	}
+	
 	
 	//exclusao em memoria - SQL via delete
 	$scope.exclui = function() {
@@ -45,7 +50,7 @@ modulo.controller('CadastroListaController',['$scope', '$location', 'ListaServic
 		ListaService.grava($scope.listaEdicao).then(
 			function(data){
 				//$scope.listaEdicao = data;
-				$scope.mensagem = 'Lista atualizada com sucesso';
+				$scope.mensagem = 'Lista atualizada/incluída com sucesso';
 				this.lista = ListaService.getListaAtual();
 			}, function(error){
 				$scope.mensagem='Erro ao atualizar/incluir';

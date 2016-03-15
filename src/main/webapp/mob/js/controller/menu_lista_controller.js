@@ -7,19 +7,19 @@ modulo.controller('MenuListaController', ['$scope','$location','ListaService',
 	$scope.lista = {};
 	$scope.listaSelecionada = {};
 	$scope.mensagem='';
-	$scope.versao = '10/03/2015 15:26';
+	$scope.versao = '15/03/2016 18:33';
 	
-	//inicializacao
-	(function() {
-	//	console.log('debug - MenuListaController.init 1 ');
+	$scope.init = function() {
 		ListaService.getListas().then(
-			function(data){
-				$scope.listas = data;
-			}, function(error){
-				console.log(error);
-			}
+				function(data){
+					$scope.listas = data;
+				}, function(error){
+					console.log(error);
+				}
 		);
-	})();
+	}
+	
+	$scope.init();
 	
 	/** lista de compras selecionada que sera detalhada na tela de cadastro de lista */
 	$scope.seleciona = function() {
