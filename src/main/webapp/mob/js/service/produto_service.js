@@ -43,7 +43,7 @@ modulo.service('ProdutoService', ['$q','$http','LogService','DaoService', functi
 
 		var listaProdutos = [];
 		
-		db.transaction(function(tx){
+		this.db.transaction(function(tx){
 			tx.executeSql('select id, descricao from produto order by descricao', null, 
 				function(tx, results){
 					var i;
