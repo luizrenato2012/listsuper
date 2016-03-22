@@ -1,10 +1,10 @@
 tr.selecionado_true {
-	background-color: #F4A460;
+	background-color: #C8E6FF;
 	font-weight: normal;
 }
 
 tr.selecionado_false {
-	background-color: #DC143C;
+	background-color: #FF9900;
 	font-weight: bold;
 }
 
